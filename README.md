@@ -159,3 +159,7 @@ scripts/      s1 … s9 pipeline steps, figures, demo builder
 tests/        unit tests on synthetic ECGs
 artifacts/    (generated) caches, models, evidence, reports, metrics, figures, demo
 ```
+
+## License and data credit
+
+Code: MIT (see `LICENSE`). Data: PTB-XL (Wagner et al., 2020/2022, doi:10.13026/kfzx-aw45) and PTB-XL+ (Strodthoff et al., 2023, doi:10.13026/nqsf-pc74), both CC BY 4.0 via PhysioNet; they are not covered by the MIT license.
