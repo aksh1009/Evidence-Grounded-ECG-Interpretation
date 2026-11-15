@@ -221,8 +221,13 @@ $("kpi").innerHTML = [
 ].map(([b, s]) => `<div><b>${b}</b><span>${s}</span></div>`).join("");
 window.addEventListener("resize", () => cur && draw());
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => cur && draw());
-const h = D.cases.findIndex(c => "#" + c.id === location.hash);
+// URL options: #<ecg_id>[:<evidence id>]  and  ?theme=light|dark
+const th = new URLSearchParams(location.search).get("theme");
+if (th) { document.documentElement.dataset.theme = th; }
+const [hid, hsel] = location.hash.slice(1).split(":");
+const h = D.cases.findIndex(c => String(c.id) === hid);
 $("pick").value = Math.max(0, h); show(Math.max(0, h));
+if (hsel) select(hsel);
 </script>
 </body>
 </html>
