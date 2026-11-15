@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "claims-ecg"
+version = "0.2.0"
+description = "Evidence-grounded ECG interpretation: measurements + CNN diagnosis + LLM reports on PTB-XL"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy", "pandas", "scipy", "scikit-learn", "wfdb", "neurokit2", "torch",
+  "matplotlib", "pyyaml", "tqdm", "transformers", "peft", "captum",
+]
+
+[project.scripts]
+claims = "claims.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

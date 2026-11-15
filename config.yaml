@@ -1,0 +1,42 @@
+# CLAIMS pipeline configuration. Paths are relative to the project root.
+paths:
+  ptbxl: data/ptb-xl                 # extracted PTB-XL v1.0.3 (records500 + CSVs)
+  ptbxl_plus: data/ptb-xl-plus       # PTB-XL+ 12SL reference features (validation only)
+  cache: artifacts/cache             # cached signals / label tables
+  artifacts: artifacts               # models, predictions, reports, metrics
+
+data:
+  fs: 500                            # native sampling rate used for measurements
+  n_samples: 5000                    # 10 s at 500 Hz
+  leads: [I, II, III, aVR, aVL, aVF, V1, V2, V3, V4, V5, V6]
+  train_folds: [1, 2, 3, 4, 5, 6, 7, 8]
+  val_fold: 9
+  test_fold: 10
+  diag_min_likelihood: 0             # diagnostic SCP codes count as present if likelihood >= this
+                                     # (0 = PTB-XL "unknown likelihood"; benchmark convention keeps them)
+  dev_subset: 0                      # >0: only use this many records (quick development runs)
+
+signal:
+  highpass_hz: 0.05                  # diagnostic-grade baseline cutoff (preserves ST segment)
+  lowpass_hz: 40.0
+  notch_hz: 50.0                     # PTB-XL was recorded in Germany (50 Hz mains)
+  cnn_fs: 100                        # CNN operates on 100 Hz (benchmark setting)
+
+cnn:
+  epochs: 40
+  batch_size: 64
+  lr: 0.003
+  weight_decay: 0.01
+  seed: 42
+  oof_groups: [[1, 2], [3, 4], [5, 6], [7, 8]]   # cross-fitting groups for out-of-fold predictions
+
+llm:
+  base_model: Qwen/Qwen2.5-1.5B-Instruct
+  max_len: 768
+  lora_r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  lr: 0.0002
+  epochs: 1
+  batch_size: 4
+  grad_accum: 4

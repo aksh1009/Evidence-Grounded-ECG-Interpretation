@@ -1,0 +1,20 @@
+training on 10842 faithful train pairs, monitoring 1323 val pairs
+trainable params: 18.5M
+encoded train 10838/10842  val 1312/1323
+val loss before training: 4.5075
+step 50/678 loss 0.9496 (277s)
+step 100/678 loss 0.6909 (536s)
+step 150/678 loss 0.3230 (805s)
+step 200/678 loss 0.3518 (1069s)
+step 250/678 loss 0.5525 (1334s)
+step 300/678 loss 0.8735 (1601s)
+step 300 val loss 0.8309
+step 350/678 loss 0.0902 (1921s)
+step 400/678 loss 0.1175 (2192s)
+step 450/678 loss 0.1230 (2458s)
+step 500/678 loss 0.6486 (2715s)
+step 550/678 loss 0.4071 (2991s)
+step 600/678 loss 0.1195 (3255s)
+step 600 val loss 0.7450
+step 650/678 loss 0.1215 (3572s)
+final val loss 0.7377

@@ -1,0 +1,29 @@
+# raw data (PTB-XL / PTB-XL+ are downloaded separately, see README)
+data/
+Data/
+*.zip
+
+# generated outputs: keep only small, documented results
+artifacts/*
+!artifacts/figures/
+!artifacts/demo/
+!artifacts/eval/
+artifacts/eval/*
+!artifacts/eval/metrics.json
+!artifacts/measurements/
+artifacts/measurements/*
+!artifacts/measurements/agreement_*.csv
+!artifacts/cnn/
+artifacts/cnn/*
+!artifacts/cnn/cnn_final.pt
+!artifacts/cnn/cnn_final.history.json
+!artifacts/cnn/thresholds.json
+!artifacts/cnn/train_final.log
+!artifacts/llm/
+artifacts/llm/*
+!artifacts/llm/train.log
+!artifacts/llm/prepare_stats.json
+
+__pycache__/
+*.egg-info/
+.pytest_cache/

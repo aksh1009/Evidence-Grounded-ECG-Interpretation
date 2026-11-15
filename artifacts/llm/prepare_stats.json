@@ -1,0 +1,20 @@
+{
+ "no_interpretation": 349,
+ "extractor_macro_recall": 0.7569911941470228,
+ "extractor_macro_precision": 0.8141003882071749,
+ "train": {
+  "pairs": 17136,
+  "faithful": 10842,
+  "faithful_frac": 0.632703081232493
+ },
+ "val": {
+  "pairs": 2156,
+  "faithful": 1323,
+  "faithful_frac": 0.6136363636363636
+ },
+ "test": {
+  "pairs": 2158,
+  "faithful": 1357,
+  "faithful_frac": 0.628822984244671
+ }
+}
