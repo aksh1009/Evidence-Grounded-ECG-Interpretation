@@ -4,13 +4,6 @@
 
 **12-lead ECG → measurements + CNN diagnoses → LLM report where every statement cites its evidence**
 
-![Python](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)
-![PyTorch](https://img.shields.io/badge/PyTorch-CNN%20%2B%20LoRA-EE4C2C?logo=pytorch&logoColor=white)
-![Dataset](https://img.shields.io/badge/data-PTB--XL%20v1.0.3-0b7285)
-![LLM](https://img.shields.io/badge/LLM-Qwen2.5--1.5B%20%2B%20LoRA-6f42c1)
-![Tests](https://img.shields.io/badge/tests-21%20passing-2f8f5b)
-![License](https://img.shields.io/badge/code-MIT-lightgrey)
-
 <img src="docs/demo_light.png" alt="CLAIMS demo: ECG 180 with the cited ST-elevation window highlighted" width="100%">
 
 <sub>The demo dashboard on test ECG 180 (left bundle branch block), with every measurement window (orange) and CNN attribution region (blue) drawn on the trace. The verified report cites <code>[C1]</code>–<code>[C3]</code>; the low-confidence finding (p = 0.15) is automatically rewritten as "possible".</sub>
