@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "claims-ecg"
 version = "0.2.0"
-description = "Evidence-grounded ECG interpretation: measurements + CNN diagnosis + LLM reports on PTB-XL"
+description = "CLAIMS (Clinical Language-Augmented Interpretation of Medical Signals): evidence-grounded ECG reports from measurements, CNN diagnoses and a verified LLM on PTB-XL"
 requires-python = ">=3.10"
 dependencies = [
   "numpy", "pandas", "scipy", "scikit-learn", "wfdb", "neurokit2", "torch",

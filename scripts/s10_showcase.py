@@ -360,6 +360,7 @@ def main():
     json.dump(cases, open(out / "cases.json", "w", encoding="utf-8"), indent=1, default=float)
 
     lines = ["# CLAIMS showcase", "",
+             "*CLAIMS: Clinical Language-Augmented Interpretation of Medical Signals*", "",
              "The best case per diagnosis from the **held-out PTB-XL test fold**, chosen automatically by "
              "`scripts/s10_showcase.py` (labels validated by a cardiologist; the CNN reports the diagnosis; the verified "
              "CLAIMS report states it and agrees with the cardiologist's labels; measurement support and clean signal "

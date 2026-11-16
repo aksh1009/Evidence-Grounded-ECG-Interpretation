@@ -1,16 +1,61 @@
 <div align="center">
 
-# CLAIMS: Evidence-Grounded ECG Reports
+# CLAIMS
 
-**12-lead ECG → measurements + CNN diagnoses → LLM report where every statement cites its evidence**
+### **C**linical **L**anguage-**A**ugmented **I**nterpretation of **M**edical **S**ignals
 
-<img src="docs/demo_light.png" alt="CLAIMS demo: ECG 180 with the cited ST-elevation window highlighted" width="100%">
+**ECG reports where every sentence cites its evidence**
 
-<sub>The demo dashboard on test ECG 180 (left bundle branch block), with every measurement window (orange) and CNN attribution region (blue) drawn on the trace. The verified report cites <code>[C1]</code>–<code>[C3]</code>; the low-confidence finding (p = 0.15) is automatically rewritten as "possible".</sub>
+12-lead ECG → measurements + CNN diagnoses → language-model report → verifier that removes anything the evidence does not support
+
+
+<img src="showcase/slide_assets/ecg20120_12lead.png" alt="12-lead ECG, PTB-XL test record 20120, left bundle branch block" width="100%">
+
+<sub>PTB-XL test ECG 20120 (57-year-old woman, held-out test fold), 25 mm/s. Cardiologist diagnosis: left bundle branch block.</sub>
 
 </div>
 
----
+<table>
+<tr>
+<th width="50%">CLAIMS output</th>
+<th width="50%">Evidence it cites</th>
+</tr>
+<tr>
+<td valign="top">
+
+**Sinus rhythm** `[C2]`<br>
+**Left axis deviation** `[M8]`<br>
+**Left bundle branch block** `[C1]`
+
+<sub>Every phrase is checked against the evidence sheet. Nothing unsupported was found, so nothing was removed.</sub>
+
+</td>
+<td valign="top">
+
+| Ref | Source | Finding |
+|---|---|---|
+| `C1` | 🟦 CNN | Complete LBBB, p = 1.00, **supported by `M4`** |
+| `C2` | 🟦 CNN | Sinus rhythm, p = 0.98 |
+| `M4` | 🟧 Measured | Wide QRS, 152 ms (≥ 120 ms) |
+| `M8` | 🟧 Measured | Left axis deviation, −40° |
+
+</td>
+</tr>
+</table>
+
+🟧 **[M#]** = measured from the signal by the measurement engine   🟦 **[C#]** = diagnosed by the CNN
+
+## At a glance
+
+All numbers are on **2,158 held-out test ECGs** (PTB-XL fold 10) that have a cardiologist's report.
+
+| | Result | Meaning |
+|:---:|---|---|
+| **0%** | unsupported claims in the final report | down from 10.4% (zero-shot LLM) and 2.0% (fine-tuned LLM) |
+| **78% → 0%** | low-confidence findings stated as fact | the verifier rewrites them as "possible …" |
+| **0.70** | clinical F1 of the reports | cardiologist reports score 0.75 on the same check |
+| **0.934** | CNN macro-AUC | 35 classes: 23 diagnoses + 12 rhythms |
+| **4 ms** | median QRS difference vs GE 12SL | measurements agree with a commercial ECG algorithm |
 
 ## Why
 
@@ -19,20 +64,14 @@ Language models write fluent ECG reports, but they also **invent findings**, and
 | Component | Decides | Can it invent? |
 |---|---|---|
 | Measurement engine and CNN | *What is in the ECG* | No: these are measured or classified from the signal |
-| LLM | *How to say it* | Yes, so… |
-| Verifier | *Whether each sentence is backed by evidence* | …cuts unsupported phrases and hedges uncertain findings |
-
-**Example output** (test ECG 180):
-
-```text
-sinus rhythm. [C2]  possible left atrial abnormality. [C3]  left bundle branch block. [C1]
-  [C1] complete left bundle branch block  p=1.00  supported by [M4] wide QRS 230 ms
-  [C2] sinus rhythm                       p=0.99
-  [C3] left atrial enlargement            p=0.15  → low confidence, hedged by the verifier
-  [M8] ST elevation 1.68 mV (secondary to wide QRS), not used as evidence of infarction
-```
+| Language model | *How to say it* | Yes, so… |
+| Verifier | *Whether each phrase is backed by evidence* | …cuts unsupported phrases and hedges uncertain findings |
 
 ## How it works
+
+| 01 · Input | 02 · Evidence | 03 · Report | 04 · Verify |
+|---|---|---|---|
+| 12-lead ECG, 500 Hz, 10 s | **Measurement engine:** HR, PR, QRS, QTc, axis, ST/T per lead → `[M#]`<br>**CNN (XResNet1d):** 35 classes + Integrated Gradients → `[C#]` | **Qwen2.5-1.5B + LoRA** writes the report from the evidence sheet only | Each clinical concept is matched to a citation. Unsupported → cut. Uncertain → "possible". |
 
 ```mermaid
 flowchart LR
@@ -50,21 +89,111 @@ flowchart LR
 ```
 
 1. **Measurements:** a hand-built engine using multi-lead beat detection, a median beat, spline baseline correction and the tangent T-end method. Every finding carries the leads and time window it was measured on.
-2. **CNN:** an XResNet1d at 100 Hz that predicts 23 diagnostic subclasses and 12 rhythms. Integrated Gradients records which leads and beat it relied on.
-3. **Evidence sheet:** guideline rules (4th UDMI ST elevation, Sokolow-Lyon/Cornell LVH, QTc by Fridericia, …). Each CNN finding is marked as supported or contradicted by the measurements. ST and Q changes on a wide QRS are marked *secondary*, so they never count as evidence of infarction.
-4. **LLM:** fine-tuned with LoRA only on *faithful* pairs, meaning the cardiologist's report is fully covered by the evidence, so the model never learns to invent.
+2. **CNN:** an XResNet1d at 100 Hz that predicts 23 diagnostic subclasses and 12 rhythms. Integrated Gradients records which leads and which beat it relied on.
+3. **Evidence sheet:** guideline rules (4th Universal Definition of MI for ST elevation, Sokolow-Lyon and Cornell for LVH, Fridericia for QTc, …). Each CNN finding is marked as supported or contradicted by the measurements. ST and Q changes on a wide QRS are marked *secondary*, so they never count as evidence of infarction.
+4. **Language model:** fine-tuned with LoRA only on *faithful* pairs, meaning the cardiologist's report is fully covered by the evidence, so the model never learns to invent.
 5. **Verifier:** extracts clinical concepts from each sentence, attaches `[M#]`/`[C#]` citations, cuts unsupported phrases and hedges low-confidence findings.
 
-<p align="center">
-  <img src="docs/demo_cnn.png" alt="Demo: ECG 514, CNN attribution for inferior MI" width="85%"><br>
-  <sub>Test ECG 514: clicking <code>[C2]</code> (inferior MI, p = 0.95) shows where the CNN looked (III, aVF, aVL). The measured ST elevation <code>[M6]</code> in II, III and aVF independently supports it.</sub>
-</p>
+## Worked examples
+
+### Example 1 · Two independent sources agree on left bundle branch block
+
+**Test ECG 20120** (the ECG at the top of this page). The CNN calls left bundle branch block, and the measurement engine independently finds a QRS of 152 ms, which the evidence sheet links as support.
+
+<table>
+<tr>
+<td width="50%" align="center"><img src="showcase/slide_assets/ecg20120_C1.png" alt="Lead V1 with the CNN attribution window for C1"><br><sub><b>🟦 C1 · where the CNN looked</b><br>LBBB, p = 1.00. Integrated Gradients points to V1, V2 and V4.</sub></td>
+<td width="50%" align="center"><img src="showcase/slide_assets/ecg20120_M4.png" alt="Lead II with the measured QRS window for M4"><br><sub><b>🟧 M4 · what was measured</b><br>QRS onset to offset: 152 ms, above the 120 ms limit for complete LBBB.</sub></td>
+</tr>
+</table>
+
+**Evidence sheet** (excerpt)
+
+| Ref | Finding | Value | Leads | Note |
+|---|---|---|---|---|
+| `C1` | Complete left bundle branch block | p 1.00 (threshold 0.20) | V1, V2, V4 | supported by `M4` |
+| `C2` | Sinus rhythm | p 0.98 | – | |
+| `C3` | Left atrial enlargement | p 0.72 | – | in the evidence, but not mentioned in the report |
+| `M4` | Wide QRS complex | 152 ms | global | criterion ≥ 120 ms |
+| `M8` | Left axis deviation | −40° | I, aVF | net QRS area in I and aVF |
+| `M9` | ST elevation | up to 0.29 mV | III, V1–V4 | **secondary to wide QRS**: not evidence of infarction |
+| `M12` | Pathological Q waves | 132 ms | V2–V4 | **secondary to wide QRS** |
+
+**Measurements vs GE 12SL** (commercial algorithm, from PTB-XL+)
+
+| | Heart rate | PR | QRS | Axis |
+|---|---|---|---|---|
+| CLAIMS | 88 bpm | 186 ms | 152 ms | −40° |
+| GE 12SL | 88 bpm | 188 ms | 152 ms | −35° |
+
+**Reports side by side**
+
+| | Report |
+|---|---|
+| **CLAIMS (verified)** | sinus rhythm `[C2]` left axis deviation `[M8]` left bundle branch block `[C1]` |
+| Cardiologist | sinus rhythm, left atrial abnormality, left axis, left bundle branch block |
+| Template (no LLM) | sinus rhythm. heart rate 88 bpm. left axis deviation (−40°). prolonged QTc (480 ms). wide QRS (152 ms). complete left bundle branch block. left atrial enlargement. |
+
+> The ST elevation and Q waves in V1–V4 would look like an anterior infarct to a naive reader. Because the QRS is wide, the evidence sheet marks them as *secondary*, and the report correctly does not mention infarction. The model did leave out the left atrial abnormality that both the CNN (`C3`) and the cardiologist found.
+
+### Example 2 · The verifier removes an invented phrase
+
+**Test ECG 8622.** The fine-tuned model adds "anteroseptal myocardial injury", but no measurement and no CNN finding supports it. The verifier cuts only that phrase and keeps the rest.
+
+<table>
+<tr>
+<td width="40%" align="center"><img src="showcase/slide_assets/ecg8622_C2.png" alt="Lead V1 with the CNN attribution window for incomplete RBBB"><br><sub><b>🟦 C2 · incomplete RBBB, p = 0.76</b><br>CNN attribution in V1</sub></td>
+<td width="60%" valign="top">
+
+| Stage | Report |
+|---|---|
+| LLM draft | sinus rhythm left axis incomplete right bundle branch block qrs(t) abnormal <del><b>anteroseptic myocardial injury possible</b></del> |
+| **CLAIMS (verified)** | sinus rhythm left axis incomplete right bundle branch block qrs(t) abnormal. `[C1, C2]` |
+| Cardiologist | sinus rhythm. incomplete right bundle branch block. non-specific T-wave flattening in V3, V4. |
+
+<sub>Evidence: `C1` sinus rhythm (p 0.99), `C2` incomplete RBBB (p 0.76), `M3` QRS 94 ms. Nothing in the evidence describes anteroseptal injury. The verifier missed one thing here: the measured axis is −6°, so "left axis" should also have been cut (see *Limitations*).</sub>
+
+</td>
+</tr>
+</table>
+
+### Example 3 · The verifier hedges an uncertain finding
+
+**Test ECG 2569.** The model writes "inferior infarct" as a fact, but the CNN is only 48% sure and no measurement supports it. The verifier keeps the finding but rewrites it as **possible**.
+
+<table>
+<tr>
+<td width="40%" align="center"><img src="showcase/slide_assets/ecg2569_C2.png" alt="Close-up with the CNN attribution window for inferior MI"><br><sub><b>🟦 C2 · inferior MI, p = 0.48</b><br>below 0.5 and no measurement support</sub></td>
+<td width="60%" valign="top">
+
+| Stage | Report |
+|---|---|
+| LLM draft | sinus rhythm left axis qrs(t) abnormal inferior infarct probably old |
+| **CLAIMS (verified)** | sinus rhythm left axis qrs(t) abnormal **possible** inferior infarct probably old. `[C1, C2]` |
+| Cardiologist | sinus rhythm, suspected left atrial abnormality, left axis deviation |
+
+<sub>Rule: a CNN finding with p < 0.5 and no supporting measurement is never stated as fact. Here the cardiologist did not call an infarct, so the hedge was the right call.</sub>
+
+</td>
+</tr>
+</table>
 
 ## Showcase
 
-[`showcase/`](showcase/) has one presentation-ready card per diagnosis (normal, AFib, brady/tachycardia, pacing, LBBB, RBBB, LAFB, AV block, inferior/anterior MI, LVH, ischaemia, non-specific ST-T), plus one hedging and one phrase-removal example. Each card shows the 12-lead ECG, close-ups of the cited evidence, measurements against GE 12SL, the CNN's top findings, and the CLAIMS report next to the cardiologist's. The cases are picked automatically from the test fold by `scripts/s10_showcase.py`; the table in [`showcase/README.md`](showcase/README.md) lists all of them.
+[`showcase/`](showcase/) has one presentation card per diagnosis, picked automatically from the test fold by `scripts/s10_showcase.py`. Each card shows the 12-lead ECG, close-ups of the cited evidence, measurements against GE 12SL, the CNN's top findings, and the CLAIMS report next to the cardiologist's.
 
-<img src="showcase/ecg_20120_complete_left_bundle_branch_block.png" alt="Showcase card: ECG 20120, left bundle branch block" width="100%">
+<table>
+<tr>
+<td width="50%"><a href="showcase/ecg_12568_atrial_fibrillation.png"><img src="showcase/ecg_12568_atrial_fibrillation.png" alt="Atrial fibrillation card"></a><br><sub><b>Atrial fibrillation</b> · ECG 12568</sub></td>
+<td width="50%"><a href="showcase/ecg_12870_inferior_myocardial_infarction.png"><img src="showcase/ecg_12870_inferior_myocardial_infarction.png" alt="Inferior MI card"></a><br><sub><b>Inferior MI</b> · ECG 12870 · supported by T-wave inversion in II and aVF</sub></td>
+</tr>
+<tr>
+<td width="50%"><a href="showcase/ecg_4758_complete_right_bundle_branch_block.png"><img src="showcase/ecg_4758_complete_right_bundle_branch_block.png" alt="Right bundle branch block card"></a><br><sub><b>Right bundle branch block</b> · ECG 4758</sub></td>
+<td width="50%"><a href="showcase/ecg_8704_left_ventricular_hypertrophy.png"><img src="showcase/ecg_8704_left_ventricular_hypertrophy.png" alt="LVH card"></a><br><sub><b>Left ventricular hypertrophy</b> · ECG 8704</sub></td>
+</tr>
+</table>
+
+All 16 cases, with each report next to the cardiologist's, are listed in [`showcase/README.md`](showcase/README.md): normal, AFib, sinus brady/tachycardia, pacing, LBBB, RBBB, LAFB, AV block, inferior and anterior MI, LVH, anterior ischaemia, non-specific ST-T, plus the hedging and phrase-removal examples.
 
 ## Results
 
@@ -79,7 +208,7 @@ All numbers are on the held-out **test fold (fold 10)**, which was used once, at
 | **Ours** | 0.3 bpm | 10 ms | 4 ms | 16 ms | 5° | 0.012 mV |
 | *12SL vs Philips Uni-G (ceiling)* | *0* | *4 ms* | *4 ms* | *6 ms* | – | *0.020 mV* |
 
-12SL and Uni-G come from [PTB-XL+](https://physionet.org/content/ptb-xl-plus/). They are used **only as a reference**, never as training labels.
+12SL and Uni-G come from PTB-XL+ [2]. They are used **only as a reference**, never as training labels.
 
 ### 2 · CNN: macro-AUC 0.934 across 35 classes
 
@@ -111,9 +240,11 @@ Superclass AUCs: NORM 0.94 · MI 0.92 · STTC 0.93 · CD 0.92 · HYP 0.90.
 
 <sub>\* The cardiologist row measures the limits of the evaluation, not cardiologist errors. The text extractor misses some phrasings, and the evidence sheet doesn't capture everything a human reads, such as comparisons with earlier ECGs.</sub>
 
-- **Fine-tuning:** wording similarity to the cardiologist rises from 0.03 to 0.51, and invented findings fall from 10.4% to 2.0%.
-- **Verifier:** unsupported claims go from 2.0% to **0%** and low-confidence findings stated as fact from 78% to **0%**, with no loss in accuracy.
-- **Honest headline:** the LLM does **not** add diagnostic accuracy over the template. Accuracy comes from the CNN and the measurements; the LLM turns them into readable text.
+- **Template:** fills a fixed sentence per finding. Accurate and safe, but it does not read like a report.
+- **Zero-shot LLM:** the base model given the evidence with no training. It invents findings (10.4%) and misses most diagnoses.
+- **Fine-tuned LLM:** wording similarity to the cardiologist rises from 0.03 to 0.51, and invented findings fall from 10.4% to 2.0%.
+- **CLAIMS (fine-tuned + verifier):** unsupported claims go from 2.0% to **0%** and low-confidence findings stated as fact from 78% to **0%**, with no loss in accuracy.
+- **Honest headline:** the language model does **not** add diagnostic accuracy over the template. Accuracy comes from the CNN and the measurements; the language model turns them into readable text, and the verifier keeps that text honest.
 
 <details>
 <summary><b>Evidence panels: CNN attribution and measured findings on the raw ECG</b></summary>
@@ -129,19 +260,19 @@ Superclass AUCs: NORM 0.94 · MI 0.92 · STTC 0.93 · CD 0.92 · HYP 0.90.
 
 ```bash
 pip install -e .
-pytest                                  # 19 unit tests on synthetic ECGs (no data or GPU needed)
+pytest                                  # 21 unit tests on synthetic ECGs (no data or GPU needed)
 ```
 
 **Analyse one ECG end to end** (needs PTB-XL and the trained models; see *Reproduce* below):
 
 ```bash
-claims analyze 180                      # PTB-XL record id
-claims analyze 180 --no-llm             # measurements + CNN + template report, no GPU needed
+claims analyze 20120                    # PTB-XL record id
+claims analyze 20120 --no-llm           # measurements + CNN + template report, no GPU needed
 claims analyze --record path/to/wfdb_record --age 61 --sex female   # any 500 Hz 12-lead WFDB record
-claims analyze 180 --json out.json
+claims analyze 20120 --json out.json
 ```
 
-**Demo page:** download [`artifacts/demo/index.html`](artifacts/demo/index.html) and open it in a browser; it works offline. It has 15 curated test ECGs: normal, AFib, LBBB, RBBB, inferior/anterior MI, LVH, pacemaker, AV block, brady/tachycardia, ischaemia, WPW, plus one hedging example and one phrase-removal example. Click any `[M#]`/`[C#]` to see it on the trace.
+**Interactive demo:** download [`artifacts/demo/index.html`](artifacts/demo/index.html) and open it in a browser; it works offline. It has 15 curated test ECGs. Click any `[M#]` or `[C#]` to see that evidence on the trace, switch between 12 × 10 s and 3 × 4 layouts, zoom, and compare the CLAIMS report with the cardiologist, template, zero-shot and fine-tuned outputs.
 
 <details>
 <summary><b>Reproduce the full pipeline</b></summary>
@@ -162,6 +293,7 @@ python scripts/s8_evaluate.py              # all test-fold metrics -> artifacts/
 python scripts/make_figures.py; python scripts/make_eval_figure.py
 python scripts/s9_build_demo.py            # artifacts/demo/index.html
 python scripts/s10_showcase.py             # showcase/*.png presentation cards
+python scripts/make_slide_assets.py        # showcase/slide_assets/ (ECG images used in this README)
 ```
 
 **Data split:** the official PTB-XL stratified folds, with no patient in more than one split. Folds 9 and 10 were all checked by a cardiologist.
@@ -172,19 +304,19 @@ python scripts/s10_showcase.py             # showcase/*.png presentation cards
 | 9 | validation | 2,183 |
 | 10 | test | 2,198 |
 
-The German and Swedish reports (14k) were translated to English with a glossary plus MarianMT `opus-mt-de-en` to serve as LLM training targets.
+The German and Swedish reports (14k) were translated to English with a glossary plus MarianMT `opus-mt-de-en` [14] to serve as training targets.
 </details>
 
 ## Design decisions
 
 | Decision | Why |
 |---|---|
-| Official PTB-XL folds; test fold used once | Patient-disjoint; comparable with published results; no tuning on test data |
+| Official PTB-XL folds; test fold used once | Patient-disjoint; comparable with published results [3]; no tuning on test data |
 | 12SL used only as a measurement reference | Labels come from cardiologists; using 12SL as labels would teach the system to copy a commercial algorithm |
 | Out-of-fold CNN predictions for LLM training | Otherwise the LLM learns from over-confident, memorised predictions it never sees at test time |
 | LLM trained only on faithful pairs | If the target report mentions things not in the evidence, the model learns to invent |
 | Loss only on report tokens | The model learns to write reports, not to repeat the prompt |
-| Wide QRS makes ST/Q findings *secondary* | In bundle branch block and pacing, ST/Q changes are expected and don't indicate infarction |
+| Wide QRS makes ST/Q findings *secondary* | In bundle branch block and pacing, ST/Q changes are expected and don't indicate infarction [10] |
 | Verifier cuts phrases, not sentences | The LLM often writes one long sentence; dropping it all would discard supported findings |
 | Hedge when CNN p < 0.5 with no measurement support | A finding that is in the evidence but uncertain must not be stated as fact |
 
@@ -197,7 +329,7 @@ The German and Swedish reports (14k) were translated to English with a glossary 
   - It has memorised a stock German-derived phrase for ST/T changes.
 - **Verifier blind spots:**
   - "Normal" statements aren't checked; for example, "normal axis" isn't compared with a measured right axis deviation.
-  - The concept extractor is rule-based and misses some phrasings.
+  - The concept extractor is rule-based and misses some phrasings. For example, it recognises "left axis deviation" but not the shorter "left axis", so in ECG 8622 "left axis" survived although the measured axis is −6°.
 - **Explanations:** Integrated Gradients highlights relevant leads on average (deleting the top lead hurts about 5× more than a random lead). For a single ECG it beats a random lead only 55% of the time, because the leads carry overlapping information.
 - **Labels and translation:** PTB-XL long-QT labels are incomplete, and machine-translated reports add noise to the training targets.
 - **Not a medical device:** this is research software and has not been clinically validated.
@@ -209,11 +341,40 @@ src/claims/   measure.py (measurement engine)   train_cnn.py, model.py, explain.
               claims_builder.py (evidence)       llm.py (report writer)    grounding.py (verifier)
               pipeline.py (one ECG end to end)   cli.py                    data.py, signal.py, report_text.py
 scripts/      s1 … s10 pipeline steps, figures, demo builder, showcase
+showcase/     presentation cards per diagnosis + ECG images used in this README
 tests/        unit tests on synthetic ECGs
-docs/         README screenshots
 artifacts/    figures, demo page, CNN checkpoint, test metrics (data and large models not committed)
 ```
 
+## References
+
+**Data**
+
+1. Wagner P, Strodthoff N, Bousseljot R-D, et al. PTB-XL, a large publicly available electrocardiography dataset. *Scientific Data* 7, 154 (2020). [doi:10.1038/s41597-020-0495-6](https://doi.org/10.1038/s41597-020-0495-6) · PhysioNet [doi:10.13026/kfzx-aw45](https://doi.org/10.13026/kfzx-aw45)
+2. Strodthoff N, Mehari T, Nagel C, et al. PTB-XL+, a comprehensive electrocardiographic feature dataset. *Scientific Data* 10, 279 (2023). [doi:10.1038/s41597-023-02153-8](https://doi.org/10.1038/s41597-023-02153-8) · PhysioNet [doi:10.13026/nqsf-pc74](https://doi.org/10.13026/nqsf-pc74)
+3. Strodthoff N, Wagner P, Schaeffter T, Samek W. Deep learning for ECG analysis: benchmarks and insights from PTB-XL. *IEEE J Biomed Health Inform* 25(5), 1519–1528 (2021). [doi:10.1109/JBHI.2020.3022989](https://doi.org/10.1109/JBHI.2020.3022989)
+4. Goldberger AL, Amaral LAN, Glass L, et al. PhysioBank, PhysioToolkit, and PhysioNet. *Circulation* 101(23), e215–e220 (2000).
+
+**Models and methods**
+
+5. He T, Zhang Z, Zhang H, et al. Bag of tricks for image classification with convolutional neural networks. *CVPR* (2019). (XResNet; 1-D variant as in [3])
+6. Sundararajan M, Taly A, Yan Q. Axiomatic attribution for deep networks (Integrated Gradients). *ICML* (2017). [arXiv:1703.01365](https://arxiv.org/abs/1703.01365)
+7. Hu EJ, Shen Y, Wallis P, et al. LoRA: Low-rank adaptation of large language models. *ICLR* (2022). [arXiv:2106.09685](https://arxiv.org/abs/2106.09685)
+8. Qwen Team. Qwen2.5 technical report (2024). [arXiv:2412.15115](https://arxiv.org/abs/2412.15115)
+
+**Clinical criteria used by the evidence sheet**
+
+9. Thygesen K, Alpert JS, Jaffe AS, et al. Fourth universal definition of myocardial infarction (2018). *Circulation* 138, e618–e651 (2018).
+10. Surawicz B, Childers R, Deal BJ, Gettes LS. AHA/ACCF/HRS recommendations for the standardization and interpretation of the electrocardiogram, part III: intraventricular conduction disturbances. *Circulation* 119, e235–e240 (2009).
+11. Sokolow M, Lyon TP. The ventricular complex in left ventricular hypertrophy as obtained by unipolar precordial and limb leads. *Am Heart J* 37(2), 161–186 (1949).
+12. Casale PN, Devereux RB, Kligfield P, et al. Electrocardiographic detection of left ventricular hypertrophy: development and prospective validation of improved criteria. *J Am Coll Cardiol* 6(3), 572–580 (1985).
+13. Fridericia LS. Die Systolendauer im Elektrokardiogramm bei normalen Menschen und bei Herzkranken. *Acta Med Scand* 53, 469–486 (1920).
+
+**Tools**
+
+14. Tiedemann J, Thottingal S. OPUS-MT: building open translation services for the world. *EAMT* (2020).
+15. Kokhlikyan N, Miglani V, Martin M, et al. Captum: a unified and generic model interpretability library for PyTorch (2020). [arXiv:2009.07896](https://arxiv.org/abs/2009.07896)
+
 ## License and data credit
 
-Code: MIT (see [`LICENSE`](LICENSE)). Data: [PTB-XL](https://doi.org/10.13026/kfzx-aw45) (Wagner et al.) and [PTB-XL+](https://doi.org/10.13026/nqsf-pc74) (Strodthoff et al.), both CC BY 4.0 via PhysioNet; they are not covered by the MIT license.
+Code: MIT (see [`LICENSE`](LICENSE)). Data: PTB-XL [1] and PTB-XL+ [2], both CC BY 4.0 via PhysioNet; they are not covered by the MIT license.
