@@ -1,0 +1,37 @@
+{
+ "ecg20120_12lead": {
+  "gain": 5
+ },
+ "ecg20120_C1": {
+  "lead": "V1",
+  "window_s": [
+   4.98,
+   5.65
+  ],
+  "finding": "complete left bundle branch block"
+ },
+ "ecg20120_M4": {
+  "lead": "II",
+  "window_s": [
+   5.23,
+   5.382
+  ],
+  "finding": "wide QRS complex"
+ },
+ "ecg8622_C2": {
+  "lead": "V1",
+  "window_s": [
+   0.82,
+   1.48
+  ],
+  "finding": "incomplete right bundle branch block"
+ },
+ "ecg2569_C2": {
+  "lead": "V4",
+  "window_s": [
+   6.44,
+   7.09
+  ],
+  "finding": "inferior myocardial infarction"
+ }
+}

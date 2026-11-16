@@ -176,7 +176,8 @@ def _mention_start(s: str, code: str) -> int | None:
 
 
 _TAIL = re.compile(r"\w*(?:\s+(?:wall|segments?|leads?|of indeterminate age|age undetermined|age undeterined|"
-                   r"possibly recent|probably old|old|recent|acute))*")
+                   r"possibly recent|probably old|old|recent|acute|"
+                   r"possible|possibly|probable|probably|not excluded|cannot be excluded))*")   # trailing hedges ("… injury possible")
 _LEAD_IN = re.compile(r"(?:(?:probabl[ey]|possibl[ey]|consistent with|suggestive of|compatible with|signs of)\s+)+$")
 
 
@@ -211,7 +212,9 @@ def trim_unsupported(s: str, codes: list[str]) -> tuple[str, list[str]]:
     while prev != s:                                    # remove joiners left dangling by the cuts
         prev = s
         s = re.sub(r"\s+", " ", s)
-        s = re.sub(r"%s(\s*%s)+" % (joiner, joiner), lambda m: m.group(0).split()[-1] if m.group(0).split() else "", s)
+        # ", or" left by a cut collapses to its last joiner, keeping a space before a word ("abnormal or …")
+        s = re.sub(r"%s(\s*%s)+" % (joiner, joiner),
+                   lambda m: (lambda last: last if last == "," else " " + last)(re.findall(r",|&|\w+", m.group(0))[-1]), s)
         s = re.sub(r"%s\s*(?=[.;]|$)" % joiner, "", s)
         s = re.sub(r"^\s*(?:%s|[.])\s*" % joiner, "", s)
         s = re.sub(r"\s+([.,;])", r"\1", s).strip()

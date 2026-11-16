@@ -173,3 +173,15 @@ def test_verifier_cuts_only_the_unsupported_phrase():
     assert ground_report("atrial fibrillation.", ev)["verified_report"] == ""
     # location words are matched as whole words ("anterolateral" is not "lateral")
     assert extract_concepts("anterolateral infarction") == {"AMI", "LMI"}
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("st & t abnormal, probably anterolateral ischaemia or left ventricular strain.",
+     "st & t abnormal or left ventricular strain."),
+    ("sinus rhythm qrs(t) abnormal anteroseptic myocardial injury possible.", "sinus rhythm qrs(t) abnormal."),
+])
+def test_trimming_leaves_clean_text(text, expected):
+    ev = {"findings": [{"id": "M1", "concept": "STD"}],
+          "diagnoses": [{"id": "C1", "concept": "SR", "probability": 0.9, "supported_by": []},
+                        {"id": "C2", "concept": "NST_", "probability": 0.9, "supported_by": []}]}
+    assert ground_report(text, ev)["sentences"][0]["verified_text"] == expected

@@ -27,3 +27,7 @@ artifacts/llm/*
 __pycache__/
 *.egg-info/
 .pytest_cache/
+
+# presentation decks (kept local)
+*.pptx
+~$*

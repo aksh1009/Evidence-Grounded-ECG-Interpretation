@@ -8,12 +8,12 @@
 ![PyTorch](https://img.shields.io/badge/PyTorch-CNN%20%2B%20LoRA-EE4C2C?logo=pytorch&logoColor=white)
 ![Dataset](https://img.shields.io/badge/data-PTB--XL%20v1.0.3-0b7285)
 ![LLM](https://img.shields.io/badge/LLM-Qwen2.5--1.5B%20%2B%20LoRA-6f42c1)
-![Tests](https://img.shields.io/badge/tests-19%20passing-2f8f5b)
+![Tests](https://img.shields.io/badge/tests-21%20passing-2f8f5b)
 ![License](https://img.shields.io/badge/code-MIT-lightgrey)
 
 <img src="docs/demo_light.png" alt="CLAIMS demo: ECG 180 with the cited ST-elevation window highlighted" width="100%">
 
-<sub>The demo page on test ECG 180 (left bundle branch block). Clicking <code>[M8]</code> shades the measured ST segment on every cited lead. The report cites <code>[C1]</code>–<code>[C3]</code>; the low-confidence finding (p = 0.15) is automatically rewritten as "possible".</sub>
+<sub>The demo dashboard on test ECG 180 (left bundle branch block), with every measurement window (orange) and CNN attribution region (blue) drawn on the trace. The verified report cites <code>[C1]</code>–<code>[C3]</code>; the low-confidence finding (p = 0.15) is automatically rewritten as "possible".</sub>
 
 </div>
 
@@ -66,6 +66,12 @@ flowchart LR
   <img src="docs/demo_cnn.png" alt="Demo: ECG 514, CNN attribution for inferior MI" width="85%"><br>
   <sub>Test ECG 514: clicking <code>[C2]</code> (inferior MI, p = 0.95) shows where the CNN looked (III, aVF, aVL). The measured ST elevation <code>[M6]</code> in II, III and aVF independently supports it.</sub>
 </p>
+
+## Showcase
+
+[`showcase/`](showcase/) has one presentation-ready card per diagnosis (normal, AFib, brady/tachycardia, pacing, LBBB, RBBB, LAFB, AV block, inferior/anterior MI, LVH, ischaemia, non-specific ST-T), plus one hedging and one phrase-removal example. Each card shows the 12-lead ECG, close-ups of the cited evidence, measurements against GE 12SL, the CNN's top findings, and the CLAIMS report next to the cardiologist's. The cases are picked automatically from the test fold by `scripts/s10_showcase.py`; the table in [`showcase/README.md`](showcase/README.md) lists all of them.
+
+<img src="showcase/ecg_20120_complete_left_bundle_branch_block.png" alt="Showcase card: ECG 20120, left bundle branch block" width="100%">
 
 ## Results
 
@@ -162,6 +168,7 @@ python scripts/s6_llm.py generate          # template / zero-shot / fine-tuned r
 python scripts/s8_evaluate.py              # all test-fold metrics -> artifacts/eval/metrics.json
 python scripts/make_figures.py; python scripts/make_eval_figure.py
 python scripts/s9_build_demo.py            # artifacts/demo/index.html
+python scripts/s10_showcase.py             # showcase/*.png presentation cards
 ```
 
 **Data split:** the official PTB-XL stratified folds, with no patient in more than one split. Folds 9 and 10 were all checked by a cardiologist.
@@ -208,7 +215,7 @@ The German and Swedish reports (14k) were translated to English with a glossary 
 src/claims/   measure.py (measurement engine)   train_cnn.py, model.py, explain.py (CNN + attribution)
               claims_builder.py (evidence)       llm.py (report writer)    grounding.py (verifier)
               pipeline.py (one ECG end to end)   cli.py                    data.py, signal.py, report_text.py
-scripts/      s1 … s9 pipeline steps, figures, demo builder
+scripts/      s1 … s10 pipeline steps, figures, demo builder, showcase
 tests/        unit tests on synthetic ECGs
 docs/         README screenshots
 artifacts/    figures, demo page, CNN checkpoint, test metrics (data and large models not committed)

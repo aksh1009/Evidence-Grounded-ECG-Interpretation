@@ -1,0 +1,4005 @@
+[
+ {
+  "ecg_id": 208,
+  "code": "NORM",
+  "category": "Normal",
+  "title": "Normal ECG",
+  "score": 2.999,
+  "f1": 1.0,
+  "why": "best case for Normal ECG",
+  "file": "ecg_208_normal_ecg.png",
+  "age": 25,
+  "sex": "female",
+  "cardiologist_labels": [
+   "NORM",
+   "SR"
+  ],
+  "claims_verified_report": "sinus rhythm normal ecg. [C1, C2]",
+  "fine_tuned_raw": "sinus rhythm normal ecg.",
+  "template": "sinus rhythm. heart rate 62 bpm. otherwise normal ecg.",
+  "cardiologist_report": "sinus rhythm normal ecg.",
+  "cardiologist_report_language": "de",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 61.658,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.91,
+      9.67
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "PR",
+     "finding": "PR interval",
+     "value": 94.0,
+     "unit": "ms",
+     "criterion": "P onset to QRS onset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.89,
+      4.988
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "SHORT_PR",
+     "finding": "short PR interval",
+     "value": 94.0,
+     "unit": "ms",
+     "criterion": "< 120 ms",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.89,
+      4.988
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 88.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.988,
+      5.076
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 411.38,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.988,
+      5.396
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": 32.417,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      4.988,
+      5.076
+     ]
+    },
+    {
+     "id": "M7",
+     "source": "measurement",
+     "concept": "ECTOPY",
+     "finding": "beats with atypical morphology (possible ectopic beats)",
+     "value": 1.0,
+     "unit": "beats",
+     "criterion": "template correlation < 0.90",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      8.68,
+      8.768
+     ],
+     "beat_times_s": [
+      8.722
+     ]
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "NORM",
+     "finding": "normal ECG",
+     "probability": 0.997,
+     "threshold": 0.46,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V4",
+      "aVR"
+     ],
+     "window_s": [
+      3.73,
+      4.38
+     ],
+     "lead_share": {
+      "V2": 0.137,
+      "V4": 0.109,
+      "aVR": 0.104
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "SR",
+     "finding": "sinus rhythm",
+     "probability": 0.987,
+     "threshold": 0.5,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "aVR",
+      "II"
+     ],
+     "window_s": [
+      3.73,
+      4.38
+     ],
+     "lead_share": {
+      "V2": 0.133,
+      "aVR": 0.125,
+      "II": 0.123
+     }
+    }
+   ]
+  }
+ },
+ {
+  "ecg_id": 12568,
+  "code": "AFIB",
+  "category": "Rhythm",
+  "title": "Atrial fibrillation",
+  "score": 3.998,
+  "f1": 1.0,
+  "why": "best case for Atrial fibrillation",
+  "file": "ecg_12568_atrial_fibrillation.png",
+  "age": 71,
+  "sex": "male",
+  "cardiologist_labels": [
+   "AFIB",
+   "NST_"
+  ],
+  "claims_verified_report": "atrial fibrillation/flutter left axis possible non-specific abnormal t. [C1, C2, C3]",
+  "fine_tuned_raw": "atrial fibrillation/flutter left axis non-specific abnormal t.",
+  "template": "atrial fibrillation. heart rate 97 bpm. possible ST/T changes. possible non-specific ST changes.",
+  "cardiologist_report": "tachykardes atrial fibrillation left axis qrs(t) abnormal pathological.",
+  "cardiologist_report_language": "de",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 97.234,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.37,
+      9.63
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "IRREG",
+     "finding": "irregular RR intervals",
+     "value": 0.209,
+     "unit": "CV",
+     "criterion": "RR CV > 0.10 with > 30% successive changes > 80 ms",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.37,
+      9.63
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "NO_P",
+     "finding": "no consistent P waves",
+     "value": 0.088,
+     "unit": "mV",
+     "criterion": "median-beat P magnitude < 0.045 mV",
+     "leads": [
+      "I",
+      "II",
+      "aVF",
+      "V1",
+      "V2"
+     ],
+     "window_s": [
+      0.37,
+      9.63
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 86.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.074,
+      5.16
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 368.201,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.074,
+      5.387
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": -15.757,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      5.074,
+      5.16
+     ]
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "AFIB",
+     "finding": "atrial fibrillation",
+     "probability": 0.992,
+     "threshold": 0.24,
+     "supported_by": [
+      "M2",
+      "M3"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "V1",
+      "V2",
+      "aVL"
+     ],
+     "window_s": [
+      8.17,
+      8.73
+     ],
+     "lead_share": {
+      "V1": 0.144,
+      "V2": 0.142,
+      "aVL": 0.112
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "STTC",
+     "finding": "ST/T changes",
+     "probability": 0.436,
+     "threshold": 0.22,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V1",
+      "aVL"
+     ],
+     "window_s": [
+      2.15,
+      2.71
+     ],
+     "lead_share": {
+      "V2": 0.138,
+      "V1": 0.118,
+      "aVL": 0.117
+     }
+    },
+    {
+     "id": "C3",
+     "source": "cnn",
+     "concept": "NST_",
+     "finding": "non-specific ST changes",
+     "probability": 0.194,
+     "threshold": 0.08,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V1",
+      "aVL"
+     ],
+     "window_s": [
+      3.46,
+      4.03
+     ],
+     "lead_share": {
+      "V2": 0.138,
+      "V1": 0.128,
+      "aVL": 0.121
+     }
+    }
+   ]
+  }
+ },
+ {
+  "ecg_id": 19424,
+  "code": "SBRAD",
+  "category": "Rhythm",
+  "title": "Sinus bradycardia",
+  "score": 3.995,
+  "f1": 1.0,
+  "why": "best case for Sinus bradycardia",
+  "file": "ecg_19424_sinus_bradycardia.png",
+  "age": 38,
+  "sex": "female",
+  "cardiologist_labels": [
+   "NORM",
+   "SBRAD"
+  ],
+  "claims_verified_report": "sinus bradycardia normal axis otherwise normal ecg. [C1, C2, M2]",
+  "fine_tuned_raw": "sinus bradycardia normal axis otherwise normal ecg.",
+  "template": "sinus bradycardia. heart rate 44 bpm. otherwise normal ecg.",
+  "cardiologist_report": "sinus bradycardia normal axis low voltage in limb leads.",
+  "cardiologist_report_language": "de",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 44.118,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      1.05,
+      9.21
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "BRADY",
+     "finding": "bradycardia",
+     "value": 44.118,
+     "unit": "bpm",
+     "criterion": "< 60 bpm",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      1.05,
+      9.21
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "PR",
+     "finding": "PR interval",
+     "value": 144.0,
+     "unit": "ms",
+     "criterion": "P onset to QRS onset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.01,
+      5.158
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 106.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.158,
+      5.264
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 412.756,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.158,
+      5.615
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": 31.174,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      5.158,
+      5.264
+     ]
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "SBRAD",
+     "finding": "sinus bradycardia",
+     "probability": 0.984,
+     "threshold": 0.38,
+     "supported_by": [
+      "M2"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V1",
+      "II"
+     ],
+     "window_s": [
+      6.25,
+      6.96
+     ],
+     "lead_share": {
+      "V2": 0.201,
+      "V1": 0.109,
+      "II": 0.1
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "NORM",
+     "finding": "normal ECG",
+     "probability": 0.896,
+     "threshold": 0.46,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V1",
+      "V4"
+     ],
+     "window_s": [
+      6.25,
+      6.96
+     ],
+     "lead_share": {
+      "V2": 0.175,
+      "V1": 0.11,
+      "V4": 0.106
+     }
+    }
+   ]
+  }
+ },
+ {
+  "ecg_id": 11727,
+  "code": "STACH",
+  "category": "Rhythm",
+  "title": "Sinus tachycardia",
+  "score": 4.0,
+  "f1": 1.0,
+  "why": "best case for Sinus tachycardia",
+  "file": "ecg_11727_sinus_tachycardia.png",
+  "age": 51,
+  "sex": "male",
+  "cardiologist_labels": [
+   "NORM",
+   "STACH"
+  ],
+  "claims_verified_report": "sinus tachycardia normal axis otherwise normal ecg. [C1, C2, M2]",
+  "fine_tuned_raw": "sinus tachycardia normal axis otherwise normal ecg.",
+  "template": "sinus tachycardia. heart rate 106 bpm. otherwise normal ecg.",
+  "cardiologist_report": "sinus tachycardia normal axis otherwise normal ecg.",
+  "cardiologist_report_language": "de",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 106.405,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.19,
+      9.78
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "TACHY",
+     "finding": "tachycardia",
+     "value": 106.405,
+     "unit": "bpm",
+     "criterion": "> 100 bpm",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.19,
+      9.78
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "PR",
+     "finding": "PR interval",
+     "value": 132.0,
+     "unit": "ms",
+     "criterion": "P onset to QRS onset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.07,
+      5.204
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 84.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.204,
+      5.288
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 358.831,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.204,
+      5.5
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": 39.943,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      5.204,
+      5.288
+     ]
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "STACH",
+     "finding": "sinus tachycardia",
+     "probability": 0.999,
+     "threshold": 0.78,
+     "supported_by": [
+      "M2"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "V1",
+      "aVR",
+      "V2"
+     ],
+     "window_s": [
+      8.91,
+      9.45
+     ],
+     "lead_share": {
+      "V1": 0.133,
+      "aVR": 0.118,
+      "V2": 0.114
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "NORM",
+     "finding": "normal ECG",
+     "probability": 0.882,
+     "threshold": 0.46,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V1",
+      "V2",
+      "V4"
+     ],
+     "window_s": [
+      0.47,
+      1.01
+     ],
+     "lead_share": {
+      "V1": 0.141,
+      "V2": 0.121,
+      "V4": 0.103
+     }
+    }
+   ]
+  }
+ },
+ {
+  "ecg_id": 13131,
+  "code": "PACE",
+  "category": "Rhythm",
+  "title": "Paced rhythm",
+  "score": 3.998,
+  "f1": 1.0,
+  "why": "best case for Paced rhythm",
+  "file": "ecg_13131_paced_rhythm.png",
+  "age": 84,
+  "sex": "male",
+  "cardiologist_labels": [
+   "PACE"
+  ],
+  "claims_verified_report": "pacemaker ecg. [C1]",
+  "fine_tuned_raw": "pacemaker ecg.",
+  "template": "pacemaker rhythm. heart rate 71 bpm. prolonged PR interval (286 ms). prolonged QTc (487 ms). wide QRS complex (364 ms). possible inferior myocardial infarction.",
+  "cardiologist_report": "schrittmacher ecg.",
+  "cardiologist_report_language": "en",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 71.029,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.06,
+      9.35
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "PR",
+     "finding": "PR interval",
+     "value": 286.0,
+     "unit": "ms",
+     "criterion": "P onset to QRS onset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.72,
+      5.01
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "LONG_PR",
+     "finding": "prolonged PR interval",
+     "value": 286.0,
+     "unit": "ms",
+     "criterion": "> 200 ms",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.72,
+      5.01
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 364.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.01,
+      5.374
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "WIDE_QRS",
+     "finding": "wide QRS complex",
+     "value": 364.0,
+     "unit": "ms",
+     "criterion": ">= 120 ms",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.01,
+      5.374
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 487.497,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.01,
+      5.471
+     ]
+    },
+    {
+     "id": "M7",
+     "source": "measurement",
+     "concept": "LONG_QT",
+     "finding": "prolonged QTc",
+     "value": 487.497,
+     "unit": "ms",
+     "criterion": "> 450 ms (male)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.01,
+      5.471
+     ]
+    },
+    {
+     "id": "M8",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": -21.879,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      5.01,
+      5.374
+     ]
+    },
+    {
+     "id": "M9",
+     "source": "measurement",
+     "concept": "STE",
+     "finding": "ST elevation (secondary to wide QRS)",
+     "value": 0.733,
+     "unit": "mV",
+     "criterion": ">= 0.1 mV (V2-V3: sex/age-specific) at J point",
+     "leads": [
+      "II",
+      "III",
+      "aVF",
+      "V1",
+      "V2",
+      "V3",
+      "V4",
+      "V5",
+      "V6"
+     ],
+     "window_s": [
+      5.374,
+      5.434
+     ],
+     "per_lead": {
+      "II": 0.44,
+      "III": 0.409,
+      "aVF": 0.42,
+      "V1": 0.19,
+      "V2": 0.593,
+      "V3": 0.723,
+      "V4": 0.733,
+      "V5": 0.628,
+      "V6": 0.48
+     },
+     "contiguous_territories": [
+      "inferior",
+      "lateral",
+      "septal",
+      "anterior"
+     ],
+     "secondary_to_wide_qrs": true
+    },
+    {
+     "id": "M10",
+     "source": "measurement",
+     "concept": "STD",
+     "finding": "ST depression (secondary to wide QRS)",
+     "value": -0.186,
+     "unit": "mV",
+     "criterion": "<= -0.05 mV at J point",
+     "leads": [
+      "aVL"
+     ],
+     "window_s": [
+      5.374,
+      5.434
+     ],
+     "per_lead": {
+      "aVL": -0.186
+     },
+     "contiguous_territories": [],
+     "secondary_to_wide_qrs": true
+    },
+    {
+     "id": "M11",
+     "source": "measurement",
+     "concept": "QWAVE",
+     "finding": "pathological Q waves (secondary to wide QRS)",
+     "value": 166.0,
+     "unit": "ms",
+     "criterion": "Q >= 40 ms and >= 0.1 mV deep",
+     "leads": [
+      "II",
+      "aVF",
+      "V2",
+      "V3",
+      "V4",
+      "V5",
+      "V6"
+     ],
+     "window_s": [
+      5.01,
+      5.374
+     ],
+     "per_lead": {
+      "II": 160.0,
+      "aVF": 164.0,
+      "V2": 166.0,
+      "V3": 162.0,
+      "V4": 162.0,
+      "V5": 164.0,
+      "V6": 160.0
+     },
+     "contiguous_territories": [
+      "inferior",
+      "lateral",
+      "anterior"
+     ],
+     "secondary_to_wide_qrs": true
+    },
+    {
+     "id": "M12",
+     "source": "measurement",
+     "concept": "ECTOPY",
+     "finding": "beats with atypical morphology (possible ectopic beats)",
+     "value": 1.0,
+     "unit": "beats",
+     "criterion": "template correlation < 0.90",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      3.274,
+      3.638
+     ],
+     "beat_times_s": [
+      3.388
+     ]
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "PACE",
+     "finding": "pacemaker rhythm",
+     "probability": 0.993,
+     "threshold": 0.08,
+     "supported_by": [
+      "M5"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "III",
+      "aVF",
+      "II"
+     ],
+     "window_s": [
+      8.14,
+      8.85
+     ],
+     "lead_share": {
+      "III": 0.114,
+      "aVF": 0.113,
+      "II": 0.113
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "IMI",
+     "finding": "inferior myocardial infarction",
+     "probability": 0.357,
+     "threshold": 0.32,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "III",
+      "V1"
+     ],
+     "window_s": [
+      8.14,
+      8.85
+     ],
+     "lead_share": {
+      "V2": 0.123,
+      "III": 0.1,
+      "V1": 0.1
+     }
+    }
+   ]
+  }
+ },
+ {
+  "ecg_id": 20120,
+  "code": "CLBBB",
+  "category": "Conduction",
+  "title": "Complete left bundle branch block",
+  "score": 4.0,
+  "f1": 1.0,
+  "why": "best case for Complete left bundle branch block",
+  "file": "ecg_20120_complete_left_bundle_branch_block.png",
+  "age": 57,
+  "sex": "female",
+  "cardiologist_labels": [
+   "CLBBB",
+   "SR"
+  ],
+  "claims_verified_report": "sinus rhythm left axis deviation left bundle branch block. [C1, C2, M8]",
+  "fine_tuned_raw": "sinus rhythm left axis deviation left bundle branch block.",
+  "template": "sinus rhythm. heart rate 88 bpm. left axis deviation (-40 deg). prolonged QTc (480 ms). wide QRS complex (152 ms). complete left bundle branch block. left atrial enlargement.",
+  "cardiologist_report": "sinus rhythm left atrial abnormality left axis left bundle branch block.",
+  "cardiologist_report_language": "de",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 87.838,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.52,
+      9.4
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "PR",
+     "finding": "PR interval",
+     "value": 186.0,
+     "unit": "ms",
+     "criterion": "P onset to QRS onset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.04,
+      5.23
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 152.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.23,
+      5.382
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "WIDE_QRS",
+     "finding": "wide QRS complex",
+     "value": 152.0,
+     "unit": "ms",
+     "criterion": ">= 120 ms",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.23,
+      5.382
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 480.041,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.23,
+      5.653
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "LONG_QT",
+     "finding": "prolonged QTc",
+     "value": 480.041,
+     "unit": "ms",
+     "criterion": "> 460 ms (female)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.23,
+      5.653
+     ]
+    },
+    {
+     "id": "M7",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": -39.714,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      5.23,
+      5.382
+     ]
+    },
+    {
+     "id": "M8",
+     "source": "measurement",
+     "concept": "LAD",
+     "finding": "left axis deviation",
+     "value": -39.714,
+     "unit": "deg",
+     "criterion": "< -30 deg",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      5.23,
+      5.382
+     ]
+    },
+    {
+     "id": "M9",
+     "source": "measurement",
+     "concept": "STE",
+     "finding": "ST elevation (secondary to wide QRS)",
+     "value": 0.292,
+     "unit": "mV",
+     "criterion": ">= 0.1 mV (V2-V3: sex/age-specific) at J point",
+     "leads": [
+      "III",
+      "V1",
+      "V2",
+      "V3",
+      "V4"
+     ],
+     "window_s": [
+      5.382,
+      5.442
+     ],
+     "per_lead": {
+      "III": 0.145,
+      "V1": 0.193,
+      "V2": 0.241,
+      "V3": 0.292,
+      "V4": 0.28
+     },
+     "contiguous_territories": [
+      "septal",
+      "anterior"
+     ],
+     "secondary_to_wide_qrs": true
+    },
+    {
+     "id": "M10",
+     "source": "measurement",
+     "concept": "STD",
+     "finding": "ST depression (secondary to wide QRS)",
+     "value": -0.123,
+     "unit": "mV",
+     "criterion": "<= -0.05 mV at J point",
+     "leads": [
+      "I",
+      "aVL",
+      "V6"
+     ],
+     "window_s": [
+      5.382,
+      5.442
+     ],
+     "per_lead": {
+      "I": -0.104,
+      "aVL": -0.123,
+      "V6": -0.091
+     },
+     "contiguous_territories": [
+      "lateral"
+     ],
+     "secondary_to_wide_qrs": true
+    },
+    {
+     "id": "M11",
+     "source": "measurement",
+     "concept": "TINV",
+     "finding": "T-wave inversion (secondary to wide QRS)",
+     "value": -0.143,
+     "unit": "mV",
+     "criterion": "<= -0.1 mV where T is normally upright",
+     "leads": [
+      "I"
+     ],
+     "window_s": [
+      5.442,
+      5.653
+     ],
+     "per_lead": {
+      "I": -0.143
+     },
+     "contiguous_territories": [],
+     "secondary_to_wide_qrs": true
+    },
+    {
+     "id": "M12",
+     "source": "measurement",
+     "concept": "QWAVE",
+     "finding": "pathological Q waves (secondary to wide QRS)",
+     "value": 132.0,
+     "unit": "ms",
+     "criterion": "Q >= 40 ms and >= 0.1 mV deep",
+     "leads": [
+      "V2",
+      "V3",
+      "V4"
+     ],
+     "window_s": [
+      5.23,
+      5.382
+     ],
+     "per_lead": {
+      "V2": 132.0,
+      "V3": 126.0,
+      "V4": 112.0
+     },
+     "contiguous_territories": [
+      "anterior"
+     ],
+     "secondary_to_wide_qrs": true
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "CLBBB",
+     "finding": "complete left bundle branch block",
+     "probability": 1.0,
+     "threshold": 0.2,
+     "supported_by": [
+      "M4"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "V1",
+      "V2",
+      "V4"
+     ],
+     "window_s": [
+      4.98,
+      5.65
+     ],
+     "lead_share": {
+      "V1": 0.149,
+      "V2": 0.12,
+      "V4": 0.118
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "SR",
+     "finding": "sinus rhythm",
+     "probability": 0.975,
+     "threshold": 0.5,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V1",
+      "V2",
+      "V4"
+     ],
+     "window_s": [
+      7.04,
+      7.71
+     ],
+     "lead_share": {
+      "V1": 0.146,
+      "V2": 0.135,
+      "V4": 0.118
+     }
+    },
+    {
+     "id": "C3",
+     "source": "cnn",
+     "concept": "LAO/LAE",
+     "finding": "left atrial enlargement",
+     "probability": 0.719,
+     "threshold": 0.14,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V1",
+      "V2",
+      "V4"
+     ],
+     "window_s": [
+      2.93,
+      3.6
+     ],
+     "lead_share": {
+      "V1": 0.143,
+      "V2": 0.124,
+      "V4": 0.112
+     }
+    }
+   ]
+  }
+ },
+ {
+  "ecg_id": 4758,
+  "code": "CRBBB",
+  "category": "Conduction",
+  "title": "Complete right bundle branch block",
+  "score": 3.984,
+  "f1": 1.0,
+  "why": "best case for Complete right bundle branch block",
+  "file": "ecg_4758_complete_right_bundle_branch_block.png",
+  "age": 80,
+  "sex": "male",
+  "cardiologist_labels": [
+   "CRBBB",
+   "SR"
+  ],
+  "claims_verified_report": "sinus rhythm. [C1] right bundle branch block. [C2]",
+  "fine_tuned_raw": "sinus rhythm. right bundle branch block.",
+  "template": "sinus rhythm. heart rate 60 bpm. extreme axis deviation (-114 deg). prolonged QTc (467 ms). wide QRS complex (146 ms). complete right bundle branch block. left anterior/posterior fascicular block. anterior myocardial infarction. possible right ventricular hypertrophy.",
+  "cardiologist_report": "sinus rhythm borderline left atrial abnormality leftward axis right bundle branch block.",
+  "cardiologist_report_language": "en",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 59.96,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.38,
+      9.38
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "BRADY",
+     "finding": "bradycardia",
+     "value": 59.96,
+     "unit": "bpm",
+     "criterion": "< 60 bpm",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.38,
+      9.38
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "PR",
+     "finding": "PR interval",
+     "value": 122.0,
+     "unit": "ms",
+     "criterion": "P onset to QRS onset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.22,
+      5.344
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 146.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.344,
+      5.49
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "WIDE_QRS",
+     "finding": "wide QRS complex",
+     "value": 146.0,
+     "unit": "ms",
+     "criterion": ">= 120 ms",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.344,
+      5.49
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 467.465,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.344,
+      5.812
+     ]
+    },
+    {
+     "id": "M7",
+     "source": "measurement",
+     "concept": "LONG_QT",
+     "finding": "prolonged QTc",
+     "value": 467.465,
+     "unit": "ms",
+     "criterion": "> 450 ms (male)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.344,
+      5.812
+     ]
+    },
+    {
+     "id": "M8",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": -114.195,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      5.344,
+      5.49
+     ]
+    },
+    {
+     "id": "M9",
+     "source": "measurement",
+     "concept": "EXT_AX",
+     "finding": "extreme axis deviation",
+     "value": -114.195,
+     "unit": "deg",
+     "criterion": "-90 to -180 deg",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      5.344,
+      5.49
+     ]
+    },
+    {
+     "id": "M10",
+     "source": "measurement",
+     "concept": "TINV",
+     "finding": "T-wave inversion (secondary to wide QRS)",
+     "value": -0.267,
+     "unit": "mV",
+     "criterion": "<= -0.1 mV where T is normally upright",
+     "leads": [
+      "V3"
+     ],
+     "window_s": [
+      5.55,
+      5.812
+     ],
+     "per_lead": {
+      "V3": -0.267
+     },
+     "contiguous_territories": [],
+     "secondary_to_wide_qrs": true
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "SR",
+     "finding": "sinus rhythm",
+     "probability": 0.954,
+     "threshold": 0.5,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V1",
+      "V6",
+      "V2"
+     ],
+     "window_s": [
+      8.11,
+      8.83
+     ],
+     "lead_share": {
+      "V1": 0.155,
+      "V6": 0.119,
+      "V2": 0.108
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "CRBBB",
+     "finding": "complete right bundle branch block",
+     "probability": 0.947,
+     "threshold": 0.04,
+     "supported_by": [
+      "M5"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "V1",
+      "V6",
+      "II"
+     ],
+     "window_s": [
+      2.1,
+      2.82
+     ],
+     "lead_share": {
+      "V1": 0.171,
+      "V6": 0.117,
+      "II": 0.1
+     }
+    },
+    {
+     "id": "C3",
+     "source": "cnn",
+     "concept": "LAFB/LPFB",
+     "finding": "left anterior/posterior fascicular block",
+     "probability": 0.79,
+     "threshold": 0.18,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V6",
+      "V1",
+      "II"
+     ],
+     "window_s": [
+      2.1,
+      2.82
+     ],
+     "lead_share": {
+      "V6": 0.129,
+      "V1": 0.129,
+      "II": 0.115
+     }
+    },
+    {
+     "id": "C4",
+     "source": "cnn",
+     "concept": "AMI",
+     "finding": "anterior myocardial infarction",
+     "probability": 0.545,
+     "threshold": 0.52,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V6",
+      "V1",
+      "V5"
+     ],
+     "window_s": [
+      2.1,
+      2.82
+     ],
+     "lead_share": {
+      "V6": 0.131,
+      "V1": 0.128,
+      "V5": 0.113
+     }
+    },
+    {
+     "id": "C5",
+     "source": "cnn",
+     "concept": "RVH",
+     "finding": "right ventricular hypertrophy",
+     "probability": 0.165,
+     "threshold": 0.16,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V1",
+      "V6",
+      "V5"
+     ],
+     "window_s": [
+      2.1,
+      2.82
+     ],
+     "lead_share": {
+      "V1": 0.143,
+      "V6": 0.125,
+      "V5": 0.107
+     }
+    }
+   ]
+  }
+ },
+ {
+  "ecg_id": 7668,
+  "code": "LAFB/LPFB",
+  "category": "Conduction",
+  "title": "Left anterior fascicular block",
+  "score": 3.995,
+  "f1": 1.0,
+  "why": "best case for Left anterior fascicular block",
+  "file": "ecg_7668_left_anterior_fascicular_block.png",
+  "age": 75,
+  "sex": "male",
+  "cardiologist_labels": [
+   "AMI",
+   "LAFB/LPFB",
+   "SR"
+  ],
+  "claims_verified_report": "sinus rhythm left axis deviation left anterior fascicular block qrs(t) abnormal anteroseptic infarct probably old. [C1, C2, C3, M7]",
+  "fine_tuned_raw": "sinus rhythm left axis deviation left anterior fascicular block qrs(t) abnormal anteroseptic infarct probably old.",
+  "template": "sinus rhythm. heart rate 88 bpm. left axis deviation (-49 deg). left anterior/posterior fascicular block. anterior myocardial infarction.",
+  "cardiologist_report": "sinus rhythm left axis deviation left anterior fascicular block qrs(t) abnormal anteroseptic infarct probably old.",
+  "cardiologist_report_language": "de",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 88.275,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.61,
+      9.45
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "PR",
+     "finding": "PR interval",
+     "value": 182.0,
+     "unit": "ms",
+     "criterion": "P onset to QRS onset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.46,
+      4.646
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 110.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.646,
+      4.756
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "BORDER_QRS",
+     "finding": "mildly prolonged QRS",
+     "value": 110.0,
+     "unit": "ms",
+     "criterion": "110-119 ms",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.646,
+      4.756
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 425.204,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.646,
+      5.02
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": -48.652,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      4.646,
+      4.756
+     ]
+    },
+    {
+     "id": "M7",
+     "source": "measurement",
+     "concept": "LAD",
+     "finding": "left axis deviation",
+     "value": -48.652,
+     "unit": "deg",
+     "criterion": "< -30 deg",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      4.646,
+      4.756
+     ]
+    },
+    {
+     "id": "M8",
+     "source": "measurement",
+     "concept": "STD",
+     "finding": "ST depression",
+     "value": -0.079,
+     "unit": "mV",
+     "criterion": "<= -0.05 mV at J point",
+     "leads": [
+      "I",
+      "aVL"
+     ],
+     "window_s": [
+      4.756,
+      4.816
+     ],
+     "per_lead": {
+      "I": -0.079,
+      "aVL": -0.06
+     },
+     "contiguous_territories": [
+      "lateral"
+     ]
+    },
+    {
+     "id": "M9",
+     "source": "measurement",
+     "concept": "QWAVE",
+     "finding": "pathological Q waves",
+     "value": 86.0,
+     "unit": "ms",
+     "criterion": "Q >= 40 ms and >= 0.1 mV deep",
+     "leads": [
+      "V2",
+      "V3"
+     ],
+     "window_s": [
+      4.646,
+      4.756
+     ],
+     "per_lead": {
+      "V2": 86.0,
+      "V3": 84.0
+     },
+     "contiguous_territories": []
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "LAFB/LPFB",
+     "finding": "left anterior/posterior fascicular block",
+     "probability": 0.983,
+     "threshold": 0.18,
+     "supported_by": [
+      "M7"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "V1",
+      "III",
+      "aVL"
+     ],
+     "window_s": [
+      3.72,
+      4.34
+     ],
+     "lead_share": {
+      "V1": 0.115,
+      "III": 0.106,
+      "aVL": 0.104
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "SR",
+     "finding": "sinus rhythm",
+     "probability": 0.96,
+     "threshold": 0.5,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V1",
+      "V3"
+     ],
+     "window_s": [
+      9.13,
+      9.76
+     ],
+     "lead_share": {
+      "V2": 0.14,
+      "V1": 0.125,
+      "V3": 0.096
+     }
+    },
+    {
+     "id": "C3",
+     "source": "cnn",
+     "concept": "AMI",
+     "finding": "anterior myocardial infarction",
+     "probability": 0.797,
+     "threshold": 0.52,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V1",
+      "III"
+     ],
+     "window_s": [
+      3.72,
+      4.34
+     ],
+     "lead_share": {
+      "V2": 0.126,
+      "V1": 0.12,
+      "III": 0.117
+     }
+    }
+   ]
+  }
+ },
+ {
+  "ecg_id": 10878,
+  "code": "_AVB",
+  "category": "Conduction",
+  "title": "AV block",
+  "score": 3.723,
+  "f1": 0.889,
+  "why": "best case for AV block",
+  "file": "ecg_10878_av_block.png",
+  "age": 86,
+  "sex": "female",
+  "cardiologist_labels": [
+   "AMI",
+   "IMI",
+   "LAFB/LPFB",
+   "SR",
+   "_AVB"
+  ],
+  "claims_verified_report": "sinus rhythm a-v block i left axis deviation qrs(t) abnormal anteroseptic infarct age undeterined inferior infarct probably old. [C1, C2, C3, C5, M3, M7]",
+  "fine_tuned_raw": "sinus rhythm a-v block i left axis deviation qrs(t) abnormal anteroseptic infarct age undeterined inferior infarct probably old.",
+  "template": "sinus rhythm. heart rate 88 bpm. left axis deviation (-64 deg). prolonged PR interval (252 ms). anterior myocardial infarction. inferior myocardial infarction. left anterior/posterior fascicular block. AV block.",
+  "cardiologist_report": "sinus rhythm a-v block i suspect left atrial abnormality left axis deviation qrs(t) abnormal anterior infarct probably old inferior infarct probably old.",
+  "cardiologist_report_language": "de",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 88.143,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.32,
+      9.85
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "PR",
+     "finding": "PR interval",
+     "value": 252.0,
+     "unit": "ms",
+     "criterion": "P onset to QRS onset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.75,
+      5.004
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "LONG_PR",
+     "finding": "prolonged PR interval",
+     "value": 252.0,
+     "unit": "ms",
+     "criterion": "> 200 ms",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.75,
+      5.004
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 74.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.004,
+      5.078
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 408.666,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.004,
+      5.363
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": -64.262,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      5.004,
+      5.078
+     ]
+    },
+    {
+     "id": "M7",
+     "source": "measurement",
+     "concept": "LAD",
+     "finding": "left axis deviation",
+     "value": -64.262,
+     "unit": "deg",
+     "criterion": "< -30 deg",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      5.004,
+      5.078
+     ]
+    },
+    {
+     "id": "M8",
+     "source": "measurement",
+     "concept": "QWAVE",
+     "finding": "pathological Q waves",
+     "value": 70.0,
+     "unit": "ms",
+     "criterion": "Q >= 40 ms and >= 0.1 mV deep",
+     "leads": [
+      "II",
+      "V2",
+      "V3",
+      "V4"
+     ],
+     "window_s": [
+      5.004,
+      5.078
+     ],
+     "per_lead": {
+      "II": 68.0,
+      "V2": 68.0,
+      "V3": 70.0,
+      "V4": 62.0
+     },
+     "contiguous_territories": [
+      "anterior"
+     ]
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "SR",
+     "finding": "sinus rhythm",
+     "probability": 0.984,
+     "threshold": 0.5,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "II",
+      "V2",
+      "aVF"
+     ],
+     "window_s": [
+      0.03,
+      0.64
+     ],
+     "lead_share": {
+      "II": 0.118,
+      "V2": 0.118,
+      "aVF": 0.107
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "AMI",
+     "finding": "anterior myocardial infarction",
+     "probability": 0.933,
+     "threshold": 0.52,
+     "supported_by": [
+      "M8"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "II",
+      "III"
+     ],
+     "window_s": [
+      4.08,
+      4.68
+     ],
+     "lead_share": {
+      "V2": 0.119,
+      "II": 0.115,
+      "III": 0.107
+     }
+    },
+    {
+     "id": "C3",
+     "source": "cnn",
+     "concept": "IMI",
+     "finding": "inferior myocardial infarction",
+     "probability": 0.928,
+     "threshold": 0.32,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "aVL",
+      "III",
+      "II"
+     ],
+     "window_s": [
+      4.08,
+      4.68
+     ],
+     "lead_share": {
+      "aVL": 0.131,
+      "III": 0.114,
+      "II": 0.111
+     }
+    },
+    {
+     "id": "C4",
+     "source": "cnn",
+     "concept": "LAFB/LPFB",
+     "finding": "left anterior/posterior fascicular block",
+     "probability": 0.871,
+     "threshold": 0.18,
+     "supported_by": [
+      "M7"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "III",
+      "II",
+      "aVL"
+     ],
+     "window_s": [
+      4.08,
+      4.68
+     ],
+     "lead_share": {
+      "III": 0.123,
+      "II": 0.111,
+      "aVL": 0.1
+     }
+    },
+    {
+     "id": "C5",
+     "source": "cnn",
+     "concept": "_AVB",
+     "finding": "AV block",
+     "probability": 0.816,
+     "threshold": 0.2,
+     "supported_by": [
+      "M3"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "III",
+      "II"
+     ],
+     "window_s": [
+      4.08,
+      4.68
+     ],
+     "lead_share": {
+      "V2": 0.14,
+      "III": 0.108,
+      "II": 0.108
+     }
+    }
+   ]
+  }
+ },
+ {
+  "ecg_id": 12870,
+  "code": "IMI",
+  "category": "Infarction",
+  "title": "Inferior myocardial infarction",
+  "score": 3.995,
+  "f1": 1.0,
+  "why": "best case for Inferior myocardial infarction",
+  "file": "ecg_12870_inferior_myocardial_infarction.png",
+  "age": 52,
+  "sex": "male",
+  "cardiologist_labels": [
+   "IMI",
+   "SR"
+  ],
+  "claims_verified_report": "sinus rhythm left axis qrs(t) abnormal inferior infarct age undetermined. [C1, C2]",
+  "fine_tuned_raw": "sinus rhythm left axis qrs(t) abnormal inferior infarct age undetermined.",
+  "template": "sinus rhythm. heart rate 59 bpm. inferior myocardial infarction.",
+  "cardiologist_report": "sinus rhythm left axis st.n. inferior infarct.",
+  "cardiologist_report_language": "de",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 58.798,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.06,
+      9.24
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "BRADY",
+     "finding": "bradycardia",
+     "value": 58.798,
+     "unit": "bpm",
+     "criterion": "< 60 bpm",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.06,
+      9.24
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "PR",
+     "finding": "PR interval",
+     "value": 124.0,
+     "unit": "ms",
+     "criterion": "P onset to QRS onset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.02,
+      5.142
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 96.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.142,
+      5.238
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 405.352,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.142,
+      5.55
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": -27.052,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      5.142,
+      5.238
+     ]
+    },
+    {
+     "id": "M7",
+     "source": "measurement",
+     "concept": "STD",
+     "finding": "ST depression",
+     "value": -0.055,
+     "unit": "mV",
+     "criterion": "<= -0.05 mV at J point",
+     "leads": [
+      "V4",
+      "V5"
+     ],
+     "window_s": [
+      5.238,
+      5.298
+     ],
+     "per_lead": {
+      "V4": -0.055,
+      "V5": -0.054
+     },
+     "contiguous_territories": []
+    },
+    {
+     "id": "M8",
+     "source": "measurement",
+     "concept": "TINV",
+     "finding": "T-wave inversion",
+     "value": -0.243,
+     "unit": "mV",
+     "criterion": "<= -0.1 mV where T is normally upright",
+     "leads": [
+      "II",
+      "aVF"
+     ],
+     "window_s": [
+      5.298,
+      5.55
+     ],
+     "per_lead": {
+      "II": -0.137,
+      "aVF": -0.243
+     },
+     "contiguous_territories": [
+      "inferior"
+     ]
+    },
+    {
+     "id": "M9",
+     "source": "measurement",
+     "concept": "QWAVE",
+     "finding": "pathological Q waves",
+     "value": 62.0,
+     "unit": "ms",
+     "criterion": "Q >= 40 ms and >= 0.1 mV deep",
+     "leads": [
+      "aVF"
+     ],
+     "window_s": [
+      5.142,
+      5.238
+     ],
+     "per_lead": {
+      "aVF": 62.0
+     },
+     "contiguous_territories": []
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "IMI",
+     "finding": "inferior myocardial infarction",
+     "probability": 0.982,
+     "threshold": 0.32,
+     "supported_by": [
+      "M8"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "aVL",
+      "III"
+     ],
+     "window_s": [
+      4.89,
+      5.55
+     ],
+     "lead_share": {
+      "V2": 0.157,
+      "aVL": 0.126,
+      "III": 0.1
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "SR",
+     "finding": "sinus rhythm",
+     "probability": 0.913,
+     "threshold": 0.5,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "aVL",
+      "III"
+     ],
+     "window_s": [
+      0.8,
+      1.46
+     ],
+     "lead_share": {
+      "V2": 0.201,
+      "aVL": 0.114,
+      "III": 0.103
+     }
+    }
+   ]
+  }
+ },
+ {
+  "ecg_id": 526,
+  "code": "AMI",
+  "category": "Infarction",
+  "title": "Anterior myocardial infarction",
+  "score": 3.998,
+  "f1": 1.0,
+  "why": "best case for Anterior myocardial infarction",
+  "file": "ecg_526_anterior_myocardial_infarction.png",
+  "age": 69,
+  "sex": "male",
+  "cardiologist_labels": [
+   "AMI",
+   "SR"
+  ],
+  "claims_verified_report": "sinus rhythm normal axis qrs(t) abnormal anteroseptic infarct age undeterinated. [C1, C2]",
+  "fine_tuned_raw": "sinus rhythm normal axis qrs(t) abnormal anteroseptic infarct age undeterinated.",
+  "template": "sinus rhythm. heart rate 61 bpm. anterior myocardial infarction.",
+  "cardiologist_report": "sinus rhythm suspected hypertrophy of v\u00e4nster f\u00f6rmak abnormal qrs(t) morphology anteroseptal infarction probably older.",
+  "cardiologist_report_language": "sv",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 60.647,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.25,
+      9.16
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "PR",
+     "finding": "PR interval",
+     "value": 200.0,
+     "unit": "ms",
+     "criterion": "P onset to QRS onset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.96,
+      5.158
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 86.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.158,
+      5.244
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 439.458,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.158,
+      5.596
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": 75.632,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      5.158,
+      5.244
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "QWAVE",
+     "finding": "pathological Q waves",
+     "value": 70.0,
+     "unit": "ms",
+     "criterion": "Q >= 40 ms and >= 0.1 mV deep",
+     "leads": [
+      "V2",
+      "V3",
+      "V4"
+     ],
+     "window_s": [
+      5.158,
+      5.244
+     ],
+     "per_lead": {
+      "V2": 70.0,
+      "V3": 66.0,
+      "V4": 58.0
+     },
+     "contiguous_territories": [
+      "anterior"
+     ]
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "AMI",
+     "finding": "anterior myocardial infarction",
+     "probability": 0.993,
+     "threshold": 0.52,
+     "supported_by": [
+      "M6"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V1",
+      "V4"
+     ],
+     "window_s": [
+      4.91,
+      5.6
+     ],
+     "lead_share": {
+      "V2": 0.134,
+      "V1": 0.126,
+      "V4": 0.106
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "SR",
+     "finding": "sinus rhythm",
+     "probability": 0.969,
+     "threshold": 0.5,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V1",
+      "V3"
+     ],
+     "window_s": [
+      0.95,
+      1.64
+     ],
+     "lead_share": {
+      "V2": 0.147,
+      "V1": 0.12,
+      "V3": 0.1
+     }
+    }
+   ]
+  }
+ },
+ {
+  "ecg_id": 8704,
+  "code": "LVH",
+  "category": "Hypertrophy",
+  "title": "Left ventricular hypertrophy",
+  "score": 3.843,
+  "f1": 1.0,
+  "why": "best case for Left ventricular hypertrophy",
+  "file": "ecg_8704_left_ventricular_hypertrophy.png",
+  "age": 76,
+  "sex": "male",
+  "cardiologist_labels": [
+   "LVH",
+   "NST_",
+   "SR"
+  ],
+  "claims_verified_report": "sinus rhythm normal axis moderate amplitude criteria for left ventricular hypertrophy t abnormal in high-lateral leads. [C1, C2, C3, C4, M8]",
+  "fine_tuned_raw": "sinus rhythm normal axis moderate amplitude criteria for left ventricular hypertrophy t abnormal in high-lateral leads.",
+  "template": "sinus rhythm. heart rate 58 bpm. prolonged PR interval (254 ms). ST/T changes. possible left ventricular hypertrophy. possible non-specific ST changes.",
+  "cardiologist_report": "sinus rhythm. prolonged pr interval. voltages are high in chest leads suggesting lvh. st segments are depressed in i, ii, avl, v4,5,6. t waves are low in i, v5,6. this may be due to lv strain or ischaemia.",
+  "cardiologist_report_language": "en",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 58.168,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.85,
+      9.11
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "BRADY",
+     "finding": "bradycardia",
+     "value": 58.168,
+     "unit": "bpm",
+     "criterion": "< 60 bpm",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.85,
+      9.11
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "PR",
+     "finding": "PR interval",
+     "value": 254.0,
+     "unit": "ms",
+     "criterion": "P onset to QRS onset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.68,
+      4.936
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "LONG_PR",
+     "finding": "prolonged PR interval",
+     "value": 254.0,
+     "unit": "ms",
+     "criterion": "> 200 ms",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.68,
+      4.936
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 74.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.936,
+      5.01
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 409.501,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.936,
+      5.35
+     ]
+    },
+    {
+     "id": "M7",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": 35.492,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      4.936,
+      5.01
+     ]
+    },
+    {
+     "id": "M8",
+     "source": "measurement",
+     "concept": "LVH_V",
+     "finding": "LVH voltage criteria",
+     "value": 4.172,
+     "unit": "mV",
+     "criterion": "Sokolow-Lyon 4.17 (>=3.5) / Cornell 0.57 (>=2.8)",
+     "leads": [
+      "V1",
+      "V5",
+      "V6",
+      "aVL",
+      "V3"
+     ],
+     "window_s": [
+      4.936,
+      5.01
+     ]
+    },
+    {
+     "id": "M9",
+     "source": "measurement",
+     "concept": "ECTOPY",
+     "finding": "beats with atypical morphology (possible ectopic beats)",
+     "value": 1.0,
+     "unit": "beats",
+     "criterion": "template correlation < 0.90",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      5.958,
+      6.032
+     ],
+     "beat_times_s": [
+      6.0
+     ]
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "SR",
+     "finding": "sinus rhythm",
+     "probability": 0.901,
+     "threshold": 0.5,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V4",
+      "II"
+     ],
+     "window_s": [
+      5.71,
+      6.37
+     ],
+     "lead_share": {
+      "V2": 0.142,
+      "V4": 0.124,
+      "II": 0.104
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "STTC",
+     "finding": "ST/T changes",
+     "probability": 0.52,
+     "threshold": 0.22,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "II",
+      "V5",
+      "V2"
+     ],
+     "window_s": [
+      4.69,
+      5.35
+     ],
+     "lead_share": {
+      "II": 0.111,
+      "V5": 0.107,
+      "V2": 0.105
+     }
+    },
+    {
+     "id": "C3",
+     "source": "cnn",
+     "concept": "LVH",
+     "finding": "left ventricular hypertrophy",
+     "probability": 0.475,
+     "threshold": 0.3,
+     "supported_by": [
+      "M8"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "V5",
+      "V4",
+      "V6"
+     ],
+     "window_s": [
+      4.69,
+      5.35
+     ],
+     "lead_share": {
+      "V5": 0.143,
+      "V4": 0.111,
+      "V6": 0.109
+     }
+    },
+    {
+     "id": "C4",
+     "source": "cnn",
+     "concept": "NST_",
+     "finding": "non-specific ST changes",
+     "probability": 0.082,
+     "threshold": 0.08,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V4",
+      "V5",
+      "V2"
+     ],
+     "window_s": [
+      5.71,
+      6.37
+     ],
+     "lead_share": {
+      "V4": 0.113,
+      "V5": 0.107,
+      "V2": 0.106
+     }
+    }
+   ]
+  }
+ },
+ {
+  "ecg_id": 4755,
+  "code": "ISCA",
+  "category": "Ischaemia",
+  "title": "Anterior ischaemia",
+  "score": 3.138,
+  "f1": 0.857,
+  "why": "best case for Anterior ischaemia",
+  "file": "ecg_4755_anterior_ischaemia.png",
+  "age": 43,
+  "sex": "male",
+  "cardiologist_labels": [
+   "IMI",
+   "ISCA",
+   "SR"
+  ],
+  "claims_verified_report": "sinus rhythm normal axis qrs(t) abnormal inferior infarct age undetermined st & t abnormal, probably anterolateral ischaemia or left ventricular strain. [C1, C2, C3, M6, M7]",
+  "fine_tuned_raw": "sinus rhythm normal axis qrs(t) abnormal inferior infarct age undetermined st & t abnormal, probably anterolateral ischaemia or left ventricular strain.",
+  "template": "sinus rhythm. heart rate 91 bpm. inferior myocardial infarction. ischemic changes in anterior leads.",
+  "cardiologist_report": "sinus rhythm normal axis qrs(t) abnormal inferior infarction age undeterminated st & t abnormal, probably highly lateral ischaemia or left ventricular strain t abnormal in anterior leads.",
+  "cardiologist_report_language": "de",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 90.713,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.28,
+      9.54
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "PR",
+     "finding": "PR interval",
+     "value": 138.0,
+     "unit": "ms",
+     "criterion": "P onset to QRS onset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.74,
+      4.878
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 92.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.878,
+      4.97
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 409.31,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.878,
+      5.235
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": 22.214,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      4.878,
+      4.97
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "STD",
+     "finding": "ST depression",
+     "value": -0.069,
+     "unit": "mV",
+     "criterion": "<= -0.05 mV at J point",
+     "leads": [
+      "aVL",
+      "V4",
+      "V5"
+     ],
+     "window_s": [
+      4.97,
+      5.03
+     ],
+     "per_lead": {
+      "aVL": -0.058,
+      "V4": -0.057,
+      "V5": -0.069
+     },
+     "contiguous_territories": [
+      "lateral"
+     ]
+    },
+    {
+     "id": "M7",
+     "source": "measurement",
+     "concept": "TINV",
+     "finding": "T-wave inversion",
+     "value": -0.191,
+     "unit": "mV",
+     "criterion": "<= -0.1 mV where T is normally upright",
+     "leads": [
+      "I",
+      "V3",
+      "V4",
+      "V5",
+      "V6"
+     ],
+     "window_s": [
+      5.03,
+      5.235
+     ],
+     "per_lead": {
+      "I": -0.167,
+      "V3": -0.181,
+      "V4": -0.169,
+      "V5": -0.191,
+      "V6": -0.16
+     },
+     "contiguous_territories": [
+      "lateral",
+      "anterior"
+     ]
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "SR",
+     "finding": "sinus rhythm",
+     "probability": 0.986,
+     "threshold": 0.5,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V1",
+      "aVL"
+     ],
+     "window_s": [
+      1.3,
+      1.9
+     ],
+     "lead_share": {
+      "V2": 0.127,
+      "V1": 0.115,
+      "aVL": 0.104
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "IMI",
+     "finding": "inferior myocardial infarction",
+     "probability": 0.949,
+     "threshold": 0.32,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "aVL",
+      "V2",
+      "V1"
+     ],
+     "window_s": [
+      3.29,
+      3.9
+     ],
+     "lead_share": {
+      "aVL": 0.15,
+      "V2": 0.125,
+      "V1": 0.101
+     }
+    },
+    {
+     "id": "C3",
+     "source": "cnn",
+     "concept": "ISCA",
+     "finding": "ischemic changes in anterior leads",
+     "probability": 0.747,
+     "threshold": 0.16,
+     "supported_by": [
+      "M7"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "V1",
+      "V2",
+      "aVR"
+     ],
+     "window_s": [
+      1.96,
+      2.57
+     ],
+     "lead_share": {
+      "V1": 0.135,
+      "V2": 0.13,
+      "aVR": 0.104
+     }
+    }
+   ]
+  }
+ },
+ {
+  "ecg_id": 6126,
+  "code": "NST_",
+  "category": "Ischaemia",
+  "title": "Non-specific ST/T changes",
+  "score": 2.779,
+  "f1": 0.857,
+  "why": "best case for Non-specific ST/T changes",
+  "file": "ecg_6126_non_specific_st_t_changes.png",
+  "age": 66,
+  "sex": "female",
+  "cardiologist_labels": [
+   "AFIB",
+   "AMI",
+   "IVCD",
+   "NST_"
+  ],
+  "claims_verified_report": "tachykardes atrial fibrillation left axis qrs(t) abnormal anteroseptic infarct probably old st & t abnormal or left ventricular strain. [C1, C2, C3, M9, M10]",
+  "fine_tuned_raw": "tachykardes atrial fibrillation left axis qrs(t) abnormal anteroseptic infarct probably old st & t abnormal, probably anterolateral ischaemia or left ventricular strain.",
+  "template": "atrial fibrillation. heart rate 152 bpm. anterior myocardial infarction. possible non-specific ST changes.",
+  "cardiologist_report": "atrial fibrillation with rapid ventricular response. non-specific intraventricular delay. poor progression of r waves in anterior chest leads. generalized st-t wave changes which are non-diagnostic.",
+  "cardiologist_report_language": "en",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 151.515,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.11,
+      9.62
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "TACHY",
+     "finding": "tachycardia",
+     "value": 151.515,
+     "unit": "bpm",
+     "criterion": "> 100 bpm",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.11,
+      9.62
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "IRREG",
+     "finding": "irregular RR intervals",
+     "value": 0.162,
+     "unit": "CV",
+     "criterion": "RR CV > 0.10 with > 30% successive changes > 80 ms",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.11,
+      9.62
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "NO_P",
+     "finding": "no consistent P waves",
+     "value": 0.055,
+     "unit": "mV",
+     "criterion": "median-beat P magnitude < 0.045 mV",
+     "leads": [
+      "I",
+      "II",
+      "aVF",
+      "V1",
+      "V2"
+     ],
+     "window_s": [
+      0.11,
+      9.62
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 96.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.166,
+      5.262
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 378.89,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      5.166,
+      5.444
+     ]
+    },
+    {
+     "id": "M7",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": -14.944,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      5.166,
+      5.262
+     ]
+    },
+    {
+     "id": "M8",
+     "source": "measurement",
+     "concept": "STE",
+     "finding": "ST elevation",
+     "value": 0.127,
+     "unit": "mV",
+     "criterion": ">= 0.1 mV (V2-V3: sex/age-specific) at J point",
+     "leads": [
+      "aVR"
+     ],
+     "window_s": [
+      5.262,
+      5.322
+     ],
+     "per_lead": {
+      "aVR": 0.127
+     },
+     "contiguous_territories": [],
+     "low_quality_leads": [
+      "aVR"
+     ]
+    },
+    {
+     "id": "M9",
+     "source": "measurement",
+     "concept": "STD",
+     "finding": "ST depression",
+     "value": -0.185,
+     "unit": "mV",
+     "criterion": "<= -0.05 mV at J point",
+     "leads": [
+      "I",
+      "II",
+      "aVL",
+      "aVF",
+      "V3",
+      "V4",
+      "V5",
+      "V6"
+     ],
+     "window_s": [
+      5.262,
+      5.322
+     ],
+     "per_lead": {
+      "I": -0.126,
+      "II": -0.127,
+      "aVL": -0.075,
+      "aVF": -0.056,
+      "V3": -0.12,
+      "V4": -0.185,
+      "V5": -0.18,
+      "V6": -0.135
+     },
+     "contiguous_territories": [
+      "inferior",
+      "lateral",
+      "anterior"
+     ],
+     "low_quality_leads": [
+      "I",
+      "II",
+      "V3",
+      "V4",
+      "V5",
+      "V6",
+      "aVL"
+     ]
+    },
+    {
+     "id": "M10",
+     "source": "measurement",
+     "concept": "TINV",
+     "finding": "T-wave inversion",
+     "value": -0.135,
+     "unit": "mV",
+     "criterion": "<= -0.1 mV where T is normally upright",
+     "leads": [
+      "I"
+     ],
+     "window_s": [
+      5.322,
+      5.444
+     ],
+     "per_lead": {
+      "I": -0.135
+     },
+     "contiguous_territories": [],
+     "low_quality_leads": [
+      "I"
+     ]
+    },
+    {
+     "id": "M11",
+     "source": "measurement",
+     "concept": "LVH_V",
+     "finding": "LVH voltage criteria",
+     "value": 2.344,
+     "unit": "mV",
+     "criterion": "Sokolow-Lyon 0.88 (>=3.5) / Cornell 2.34 (>=2.0)",
+     "leads": [
+      "V1",
+      "V5",
+      "V6",
+      "aVL",
+      "V3"
+     ],
+     "window_s": [
+      5.166,
+      5.262
+     ]
+    },
+    {
+     "id": "M12",
+     "source": "measurement",
+     "concept": "ECTOPY",
+     "finding": "beats with atypical morphology (possible ectopic beats)",
+     "value": 12.0,
+     "unit": "beats",
+     "criterion": "template correlation < 0.90",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.48,
+      0.576
+     ],
+     "beat_times_s": [
+      0.528,
+      0.956,
+      3.502,
+      3.84,
+      4.134,
+      4.906,
+      5.646,
+      6.1,
+      6.514,
+      7.084,
+      7.462,
+      7.826
+     ]
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "AFIB",
+     "finding": "atrial fibrillation",
+     "probability": 0.985,
+     "threshold": 0.24,
+     "supported_by": [
+      "M3",
+      "M4"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V1",
+      "V3"
+     ],
+     "window_s": [
+      7.16,
+      7.69
+     ],
+     "lead_share": {
+      "V2": 0.148,
+      "V1": 0.139,
+      "V3": 0.096
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "AMI",
+     "finding": "anterior myocardial infarction",
+     "probability": 0.83,
+     "threshold": 0.52,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V1",
+      "V3"
+     ],
+     "window_s": [
+      6.79,
+      7.31
+     ],
+     "lead_share": {
+      "V2": 0.149,
+      "V1": 0.146,
+      "V3": 0.091
+     }
+    },
+    {
+     "id": "C3",
+     "source": "cnn",
+     "concept": "NST_",
+     "finding": "non-specific ST changes",
+     "probability": 0.215,
+     "threshold": 0.08,
+     "supported_by": [
+      "M10",
+      "M9"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V1",
+      "V3"
+     ],
+     "window_s": [
+      2.32,
+      2.84
+     ],
+     "lead_share": {
+      "V2": 0.152,
+      "V1": 0.139,
+      "V3": 0.084
+     }
+    }
+   ]
+  }
+ },
+ {
+  "ecg_id": 2569,
+  "code": null,
+  "category": "Verifier",
+  "title": "Verifier hedges a low-confidence finding",
+  "score": null,
+  "f1": 1.0,
+  "why": "Verifier hedges a low-confidence finding",
+  "file": "ecg_2569_verifier_hedges_a_low_confidence_finding.png",
+  "age": 65,
+  "sex": "male",
+  "cardiologist_labels": [
+   "IMI",
+   "SR"
+  ],
+  "claims_verified_report": "sinus rhythm left axis qrs(t) abnormal possible inferior infarct probably old. [C1, C2]",
+  "fine_tuned_raw": "sinus rhythm left axis qrs(t) abnormal inferior infarct probably old.",
+  "template": "sinus rhythm. heart rate 62 bpm. left axis deviation (-35 deg). possible inferior myocardial infarction. possible ST/T changes.",
+  "cardiologist_report": "sinus rhythm suspected left atrial abnormality left axis deviation.",
+  "cardiologist_report_language": "de",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 61.898,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.9,
+      9.62
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "PR",
+     "finding": "PR interval",
+     "value": 156.0,
+     "unit": "ms",
+     "criterion": "P onset to QRS onset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.58,
+      4.738
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 86.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.738,
+      4.824
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 407.726,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.738,
+      5.142
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": -35.165,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      4.738,
+      4.824
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "LAD",
+     "finding": "left axis deviation",
+     "value": -35.165,
+     "unit": "deg",
+     "criterion": "< -30 deg",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      4.738,
+      4.824
+     ]
+    },
+    {
+     "id": "M7",
+     "source": "measurement",
+     "concept": "STD",
+     "finding": "ST depression",
+     "value": -0.051,
+     "unit": "mV",
+     "criterion": "<= -0.05 mV at J point",
+     "leads": [
+      "III"
+     ],
+     "window_s": [
+      4.824,
+      4.884
+     ],
+     "per_lead": {
+      "III": -0.051
+     },
+     "contiguous_territories": []
+    },
+    {
+     "id": "M8",
+     "source": "measurement",
+     "concept": "ECTOPY",
+     "finding": "beats with atypical morphology (possible ectopic beats)",
+     "value": 1.0,
+     "unit": "beats",
+     "criterion": "template correlation < 0.90",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      8.634,
+      8.72
+     ],
+     "beat_times_s": [
+      8.67
+     ]
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "SR",
+     "finding": "sinus rhythm",
+     "probability": 0.972,
+     "threshold": 0.5,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V3",
+      "V4"
+     ],
+     "window_s": [
+      8.38,
+      9.04
+     ],
+     "lead_share": {
+      "V2": 0.169,
+      "V3": 0.146,
+      "V4": 0.115
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "IMI",
+     "finding": "inferior myocardial infarction",
+     "probability": 0.476,
+     "threshold": 0.32,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V4",
+      "V3",
+      "V2"
+     ],
+     "window_s": [
+      6.44,
+      7.09
+     ],
+     "lead_share": {
+      "V4": 0.109,
+      "V3": 0.107,
+      "V2": 0.105
+     }
+    },
+    {
+     "id": "C3",
+     "source": "cnn",
+     "concept": "STTC",
+     "finding": "ST/T changes",
+     "probability": 0.409,
+     "threshold": 0.22,
+     "supported_by": [
+      "M7"
+     ],
+     "contradicted_by": [],
+     "leads": [
+      "V2",
+      "V3",
+      "V4"
+     ],
+     "window_s": [
+      1.57,
+      2.23
+     ],
+     "lead_share": {
+      "V2": 0.148,
+      "V3": 0.121,
+      "V4": 0.108
+     }
+    }
+   ]
+  }
+ },
+ {
+  "ecg_id": 8622,
+  "code": null,
+  "category": "Verifier",
+  "title": "Verifier removes an unsupported phrase",
+  "score": null,
+  "f1": 1.0,
+  "why": "Verifier removes an unsupported phrase",
+  "file": "ecg_8622_verifier_removes_an_unsupported_phrase.png",
+  "age": 56,
+  "sex": "female",
+  "cardiologist_labels": [
+   "IRBBB",
+   "SR"
+  ],
+  "claims_verified_report": "sinus rhythm left axis incomplete right bundle branch block qrs(t) abnormal. [C1, C2]",
+  "fine_tuned_raw": "sinus rhythm left axis incomplete right bundle branch block qrs(t) abnormal anteroseptic myocardial injury possible.",
+  "template": "sinus rhythm. heart rate 64 bpm. incomplete right bundle branch block.",
+  "cardiologist_report": "sinus rhythm. incomplete right bundle branch block. non-specific t wave flattening in v3,4.",
+  "cardiologist_report_language": "en",
+  "evidence": {
+   "findings": [
+    {
+     "id": "M1",
+     "source": "measurement",
+     "concept": "HR",
+     "finding": "heart rate",
+     "value": 64.447,
+     "unit": "bpm",
+     "criterion": "mean RR",
+     "leads": [
+      "all"
+     ],
+     "window_s": [
+      0.19,
+      9.5
+     ]
+    },
+    {
+     "id": "M2",
+     "source": "measurement",
+     "concept": "PR",
+     "finding": "PR interval",
+     "value": 198.0,
+     "unit": "ms",
+     "criterion": "P onset to QRS onset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.55,
+      4.752
+     ]
+    },
+    {
+     "id": "M3",
+     "source": "measurement",
+     "concept": "QRS",
+     "finding": "QRS duration",
+     "value": 94.0,
+     "unit": "ms",
+     "criterion": "QRS onset to offset",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.752,
+      4.846
+     ]
+    },
+    {
+     "id": "M4",
+     "source": "measurement",
+     "concept": "QTC",
+     "finding": "QTc (Fridericia)",
+     "value": 421.458,
+     "unit": "ms",
+     "criterion": "QT / RR^(1/3)",
+     "leads": [
+      "global"
+     ],
+     "window_s": [
+      4.752,
+      5.164
+     ]
+    },
+    {
+     "id": "M5",
+     "source": "measurement",
+     "concept": "AXIS",
+     "finding": "frontal QRS axis",
+     "value": -6.144,
+     "unit": "deg",
+     "criterion": "net QRS area in I and aVF",
+     "leads": [
+      "I",
+      "aVF"
+     ],
+     "window_s": [
+      4.752,
+      4.846
+     ]
+    },
+    {
+     "id": "M6",
+     "source": "measurement",
+     "concept": "QWAVE",
+     "finding": "pathological Q waves",
+     "value": 48.0,
+     "unit": "ms",
+     "criterion": "Q >= 40 ms and >= 0.1 mV deep",
+     "leads": [
+      "aVF"
+     ],
+     "window_s": [
+      4.752,
+      4.846
+     ],
+     "per_lead": {
+      "aVF": 48.0
+     },
+     "contiguous_territories": []
+    }
+   ],
+   "diagnoses": [
+    {
+     "id": "C1",
+     "source": "cnn",
+     "concept": "SR",
+     "finding": "sinus rhythm",
+     "probability": 0.992,
+     "threshold": 0.5,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "aVR",
+      "aVL",
+      "I"
+     ],
+     "window_s": [
+      0.0,
+      0.57
+     ],
+     "lead_share": {
+      "aVR": 0.146,
+      "aVL": 0.133,
+      "I": 0.117
+     }
+    },
+    {
+     "id": "C2",
+     "source": "cnn",
+     "concept": "IRBBB",
+     "finding": "incomplete right bundle branch block",
+     "probability": 0.763,
+     "threshold": 0.56,
+     "supported_by": [],
+     "contradicted_by": [],
+     "leads": [
+      "V1",
+      "aVR",
+      "aVL"
+     ],
+     "window_s": [
+      0.82,
+      1.48
+     ],
+     "lead_share": {
+      "V1": 0.175,
+      "aVR": 0.12,
+      "aVL": 0.117
+     }
+    }
+   ]
+  }
+ }
+]

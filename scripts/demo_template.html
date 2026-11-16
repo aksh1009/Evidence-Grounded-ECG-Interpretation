@@ -3,231 +3,927 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CLAIMS ECG Demo</title>
+<title>CLAIMS · Evidence-Grounded ECG Interpretation</title>
 <style>
 :root{
-  --bg:#f7f6f3; --surface:#ffffff; --ink:#1d1d1f; --ink2:#55555c; --muted:#8a8a92; --line:#e4e2dc;
-  --grid-minor:#f6dede; --grid-major:#ecbcbc; --trace:#1d1d1f;
-  --meas:#d9822b; --meas-bg:rgba(217,130,43,.22); --cnn:#3a6fd8; --cnn-bg:rgba(58,111,216,.18);
-  --ok:#2f8f5b; --warn:#b7791f; --bad:#c2410c; --chip:#f0efe9;
+  --bg:#f4f6f9; --panel:#ffffff; --panel-2:#f8fafc; --ink:#0f1b2d; --ink-2:#3d4b5f; --muted:#6b7a8f; --faint:#94a3b8;
+  --line:#e3e8ef; --line-2:#d5dce6;
+  --accent:#0f766e; --accent-2:#115e59; --accent-soft:#e6f4f2;
+  --meas:#c2410c; --meas-fill:rgba(234,88,12,.16); --meas-soft:#fff4ec;
+  --cnn:#1d4ed8; --cnn-fill:rgba(37,99,235,.14); --cnn-soft:#eef3ff;
+  --warn:#a16207; --warn-soft:#fef7e6; --bad:#b42318; --bad-soft:#fdeceb; --ok:#15803d; --ok-soft:#eaf6ee;
+  --shadow:0 1px 2px rgba(15,27,45,.04),0 2px 8px rgba(15,27,45,.05);
+  --r:12px; --r-sm:8px;
+  --font:"Inter","Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono","Cascadia Mono",Consolas,ui-monospace,monospace;
 }
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#141416; --surface:#1d1d20; --ink:#ececf0; --ink2:#b4b4bc; --muted:#85858f; --line:#33333a;
-  --grid-minor:#2a2124; --grid-major:#4a2f33; --trace:#ececf0;
-  --meas:#f0a050; --meas-bg:rgba(240,160,80,.25); --cnn:#7aa3f0; --cnn-bg:rgba(122,163,240,.22);
-  --ok:#5cc28a; --warn:#e0a84a; --bad:#f07a4a; --chip:#2a2a2f; } }
-:root[data-theme="dark"]{
-  --bg:#141416; --surface:#1d1d20; --ink:#ececf0; --ink2:#b4b4bc; --muted:#85858f; --line:#33333a;
-  --grid-minor:#2a2124; --grid-major:#4a2f33; --trace:#ececf0;
-  --meas:#f0a050; --meas-bg:rgba(240,160,80,.25); --cnn:#7aa3f0; --cnn-bg:rgba(122,163,240,.22);
-  --ok:#5cc28a; --warn:#e0a84a; --bad:#f07a4a; --chip:#2a2a2f; }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
-header{padding:18px 20px 8px;max-width:1500px;margin:0 auto}
-h1{font-size:20px;margin:0 0 4px}
-.sub{color:var(--ink2);margin:0}
-.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
-select{font:inherit;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
-main{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(320px,1fr);gap:16px;padding:8px 20px 30px;max-width:1500px;margin:0 auto}
-@media (max-width:980px){main{grid-template-columns:1fr;padding:8px 16px 24px}header{padding:16px 16px 8px}}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px}
-.card h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 10px}
-#ecgwrap{position:relative}
-canvas{width:100%;display:block}
-#tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:3px 7px;font-size:12px;color:var(--ink2);display:none;white-space:nowrap}
-.legend{display:flex;gap:16px;flex-wrap:wrap;color:var(--ink2);font-size:12px;margin-top:8px}
-.sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px}
-.rep{margin:0 0 12px}
-.rep .lbl{font-size:12px;color:var(--muted);margin-bottom:2px}
-.rep .txt{margin:0}
-.chip{display:inline-block;font:12px/1.2 ui-monospace,Consolas,monospace;padding:2px 6px;margin:0 2px;border-radius:5px;background:var(--chip);color:var(--ink);border:1px solid var(--line);cursor:pointer}
-.chip.m{border-color:var(--meas)} .chip.c{border-color:var(--cnn)}
-.chip.on{outline:2px solid var(--ink)}
-.hedge{text-decoration:underline dotted var(--warn);text-underline-offset:3px}
-.removed{text-decoration:line-through;color:var(--muted)}
-.tag{font-size:11px;padding:1px 6px;border-radius:999px;margin-left:6px;border:1px solid currentColor}
-.tag.warn{color:var(--warn)} .tag.bad{color:var(--bad)} .tag.ok{color:var(--ok)}
-.ev{display:flex;gap:8px;padding:5px 4px;border-radius:6px;cursor:pointer;align-items:baseline}
-.ev:hover,.ev.on{background:var(--chip)}
-.ev .v{color:var(--ink2)}
-.ev small{color:var(--muted)}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1440px;margin:0 auto;padding:0 24px}
+@media (max-width:720px){.wrap{padding:0 16px}}
+
+/* ---------- header ---------- */
+header.top{background:var(--panel);border-bottom:1px solid var(--line)}
+.top-inner{display:flex;gap:24px;align-items:center;justify-content:space-between;padding:16px 0;flex-wrap:wrap}
+.brand{display:flex;gap:14px;align-items:center;min-width:0}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--ink);display:grid;place-items:center;flex:none}
+.brand h1{margin:0;font-size:18px;letter-spacing:-.01em;line-height:1.25}
+.brand h1 b{font-weight:750;letter-spacing:.06em}
+.brand h1 span{font-weight:500;color:var(--ink-2)}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:13px;max-width:640px}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.pill{font-size:11.5px;font-weight:600;padding:2px 9px;border-radius:999px;border:1px solid var(--line-2);color:var(--ink-2);background:var(--panel-2)}
+.pill.accent{border-color:#b7dcd7;color:var(--accent-2);background:var(--accent-soft)}
+.pillars{display:flex;gap:18px;flex-wrap:wrap}
+.pillar{display:flex;gap:8px;align-items:flex-start;max-width:215px;font-size:12.5px;color:var(--ink-2)}
+.pillar b{color:var(--ink)}
+.pillar i{flex:none;width:22px;height:22px;border-radius:6px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-style:normal;font-weight:700;font-size:12px}
+
+/* ---------- generic panels ---------- */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.ph{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px 0;flex-wrap:wrap}
+.ph h2,.ph h3{margin:0;font-size:14.5px;font-weight:650;letter-spacing:-.005em}
+.ph .sub{color:var(--muted);font-size:12.5px}
+.pb{padding:12px 18px 16px}
+.eyebrow{font-size:11px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.section-title{display:flex;align-items:baseline;gap:12px;margin:30px 0 12px;flex-wrap:wrap}
+.section-title h2{margin:0;font-size:18px;letter-spacing:-.01em}
+.section-title p{margin:0;color:var(--muted);font-size:13px}
+.note{color:var(--muted);font-size:12.5px}
+
+/* ---------- case selector ---------- */
+.selector{margin-top:18px;padding:12px 14px}
+.sel-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.search{position:relative;flex:0 1 220px;min-width:160px}
+.search input{width:100%;padding:8px 10px 8px 32px;border:1px solid var(--line-2);border-radius:var(--r-sm);font:inherit;background:var(--panel);color:var(--ink)}
+.search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--faint)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip-f{border:1px solid var(--line-2);background:var(--panel);border-radius:999px;padding:4px 11px;font-size:12.5px;cursor:pointer;color:var(--ink-2)}
+.chip-f[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip-f .n{opacity:.6;margin-left:4px}
+.cases{display:flex;gap:10px;overflow-x:auto;padding:12px 2px 4px;scroll-snap-type:x proximity}
+.case{flex:0 0 212px;scroll-snap-align:start;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 11px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.case:hover{border-color:var(--line-2);box-shadow:var(--shadow)}
+.case[aria-current="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;background:var(--accent-soft)}
+.case .cid{font:600 12px var(--mono);color:var(--ink)}
+.case .ct{font-size:12.5px;color:var(--ink-2);margin:2px 0 6px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:34px}
+.cat{display:inline-block;font-size:10.5px;font-weight:650;letter-spacing:.02em;padding:1px 7px;border-radius:999px;border:1px solid}
+.cat-Normal{color:#15803d;border-color:#bfe3cb;background:#effaf2}
+.cat-Rhythm{color:#6d28d9;border-color:#ddd0fb;background:#f6f2ff}
+.cat-Conduction{color:#0369a1;border-color:#bfe0f2;background:#eef8fd}
+.cat-Ischaemia{color:#a16207;border-color:#f2deb0;background:#fef8e8}
+.cat-Infarction{color:#b42318;border-color:#f4c7c3;background:#fdf0ef}
+.cat-Hypertrophy{color:#475569;border-color:#d5dce6;background:#f4f6f9}
+.vtag{display:inline-block;font-size:10.5px;font-weight:600;color:var(--accent-2);margin-left:4px}
+.empty{color:var(--muted);padding:10px 4px;font-size:13px}
+
+/* ---------- overview ---------- */
+.overview{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin-top:14px}
+@media (max-width:1180px){.overview{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:620px){.overview{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.metric{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+.metric .k{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.metric .v{font-size:19px;font-weight:650;letter-spacing:-.01em;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.metric .v small{font-size:12px;font-weight:500;color:var(--muted);margin-left:2px}
+.metric .s{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.metric.wide .v{font-size:15px;white-space:normal;line-height:1.3}
+
+/* ---------- main grid ---------- */
+.main{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;margin-top:14px;align-items:start}
+@media (max-width:1180px){.main{grid-template-columns:minmax(0,1fr)}}
+.panel,.main>*,.side>*{min-width:0}
+body{overflow-x:hidden}
+.side{display:flex;flex-direction:column;gap:16px;min-width:0}
+
+/* ---------- viewer ---------- */
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:var(--r-sm);overflow:hidden}
+.seg button{border:0;background:var(--panel);padding:5px 10px;font-size:12.5px;cursor:pointer;color:var(--ink-2)}
+.seg button+button{border-left:1px solid var(--line-2)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.seg button:disabled{color:var(--faint);cursor:not-allowed;background:var(--panel-2)}
+.tlabel{font-size:12px;color:var(--muted);margin-right:-2px}
+.toggle{display:inline-flex;gap:6px;align-items:center;font-size:12.5px;color:var(--ink-2);cursor:pointer;user-select:none}
+.toggle input{accent-color:var(--accent)}
+.viewer{position:relative;overflow-x:auto;border:1px solid var(--line);border-radius:10px;margin:12px 0 0;background:#fff}
+.viewer canvas{display:block;min-width:760px;width:100%;cursor:crosshair;touch-action:pan-y}
+#tip{position:absolute;pointer-events:none;background:rgba(15,27,45,.94);color:#fff;border-radius:6px;padding:5px 8px;font-size:11.5px;display:none;white-space:nowrap;z-index:5;line-height:1.45}
+#tip b{font-family:var(--mono);font-weight:600}
+.pan[hidden]{display:none}
+.pan{display:flex;gap:10px;align-items:center;margin-top:8px}
+.pan input{flex:1;accent-color:var(--accent)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink-2);margin-top:10px}
+.sw{display:inline-block;width:14px;height:10px;border-radius:2px;vertical-align:-1px;margin-right:6px}
+.sw.m{background:var(--meas-fill);border:1.5px solid var(--meas)}
+.sw.c{background:var(--cnn-fill);border:1.5px dashed var(--cnn)}
+.detail{margin-top:12px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--panel-2);font-size:13px;min-height:46px;display:flex;gap:10px;align-items:flex-start}
+.detail .hint{color:var(--muted)}
+.detail .x{margin-left:auto;border:0;background:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1}
+.val{font-variant-numeric:tabular-nums;color:var(--ink-2);font-weight:500;margin-left:4px}
+
+/* ---------- citations / badges ---------- */
+.cite{display:inline-flex;align-items:center;font:600 11.5px/1 var(--mono);padding:3px 6px;border-radius:5px;margin:0 1px;cursor:pointer;border:1px solid;vertical-align:1px;transition:background .12s}
+.cite.m{color:var(--meas);border-color:#f3c7ad;background:var(--meas-soft)}
+.cite.c{color:var(--cnn);border-color:#c5d4f7;background:var(--cnn-soft)}
+.cite:hover,.cite.on{background:#fff;box-shadow:0 0 0 2px currentColor inset}
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:1px 7px;border-radius:999px;margin:0 4px 0 0;vertical-align:1px;border:1px solid}
+.tag.warn{color:var(--warn);border-color:#f0d9a6;background:var(--warn-soft)}
+.tag.bad{color:var(--bad);border-color:#f4c7c3;background:var(--bad-soft)}
+.tag.ok{color:var(--ok);border-color:#bfe3cb;background:var(--ok-soft)}
+.tag.neutral{color:var(--ink-2);border-color:var(--line-2);background:var(--panel-2)}
+.tag .cite{font-size:10.5px;padding:1px 4px}
+
+/* ---------- reports ---------- */
+.report-main{border-top:3px solid var(--accent)}
+.report-text{font-size:15.5px;line-height:1.8;color:var(--ink);margin:0}
+.report-text .sent{margin-right:4px}
+.report-text .hedged{background:linear-gradient(transparent 60%,#fde9b7 60%)}
+.removed-box{margin-top:12px;border:1px dashed #f0c0bb;background:var(--bad-soft);border-radius:8px;padding:8px 10px;font-size:12.5px;color:var(--bad)}
+.removed-box s{color:#8a2a22}
+.report-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.reports-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:860px){.reports-row{grid-template-columns:minmax(0,1fr)}}
+.rep-text{font-size:14.5px;line-height:1.65;margin:0}
+.src{font-size:12px;color:var(--muted);margin-top:6px}
+details.orig{margin-top:10px;font-size:13px}
+details summary{cursor:pointer}
+details.orig summary{color:var(--ink-2);font-weight:600}
+details.orig p{margin:6px 0 0;color:var(--ink-2);font-style:italic}
+details.cmp{margin-top:16px}
+details.cmp>summary{padding:12px 18px;list-style:none;display:flex;align-items:center;gap:8px;font-weight:650;flex-wrap:wrap}
+details.cmp>summary::-webkit-details-marker{display:none}
+details.cmp>summary::before{content:"▸";transition:transform .15s;color:var(--muted)}
+details.cmp[open]>summary::before{transform:rotate(90deg)}
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:0 18px 16px}
+@media (max-width:860px){.cmp-grid{grid-template-columns:1fr}}
+.md{font-size:13px;line-height:1.6;color:var(--ink-2);max-height:360px;overflow:auto;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.md p{margin:0 0 8px}.md ul{margin:0 0 8px;padding-left:18px}.md strong{color:var(--ink)}
+
+/* ---------- evidence explorer ---------- */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);padding:0 14px;margin-top:10px}
+.tab{border:0;background:none;padding:9px 8px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab .n{font-weight:500;color:var(--faint);margin-left:4px}
+.ev-list{max-height:560px;overflow:auto;padding:6px 8px 10px}
+.ev{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;padding:9px 8px;border-radius:8px;cursor:pointer;border:1px solid transparent}
+.ev:hover{background:var(--panel-2)}
+.ev.on{background:var(--panel-2);border-color:var(--line-2)}
+.ev .nm{font-weight:600;font-size:13.5px}
+.ev .meta{grid-column:2;font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:3px 12px}
+.ev .meta b{font-weight:600;color:var(--ink-2)}
+.ev .crit{grid-column:2;font-size:12px;color:var(--muted)}
+.pbar{grid-column:2;position:relative;height:6px;border-radius:3px;background:#eef1f5;margin:4px 0 2px}
+.pbar .f{position:absolute;inset:0 auto 0 0;border-radius:3px;background:var(--cnn)}
+.pbar .t{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);border-radius:1px}
+
+/* ---------- tables & bars ---------- */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:980px){.two{grid-template-columns:minmax(0,1fr)}}
 table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{text-align:right;padding:4px 6px;border-bottom:1px solid var(--line)}
+th{font-size:11px;font-weight:650;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:8px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
 th:first-child,td:first-child{text-align:left}
-th{color:var(--muted);font-weight:500}
-.prob{display:grid;grid-template-columns:minmax(0,1fr) 120px 44px;gap:8px;align-items:center;font-size:13px;padding:2px 0}
-.track{position:relative;height:8px;background:var(--chip);border-radius:4px}
-.fill{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--cnn)}
-.thr{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink2)}
-.num{text-align:right;color:var(--ink2);font-variant-numeric:tabular-nums}
-.flag{color:var(--bad);font-size:13px}
-.note{color:var(--muted);font-size:12px}
-details summary{cursor:pointer;color:var(--ink2);font-size:13px}
-.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
-.kpi div{background:var(--chip);border-radius:8px;padding:8px 10px}
-.kpi b{display:block;font-size:20px}
-.kpi span{color:var(--ink2);font-size:12px}
+tr:last-child td{border-bottom:0}
+td.na{color:var(--faint);font-style:italic}
+.dbar{display:inline-block;height:6px;border-radius:3px;background:#cbd5e1;vertical-align:middle;margin-left:8px}
+.prow{display:grid;grid-template-columns:minmax(0,1fr) minmax(110px,40%) 96px;gap:12px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.prow:last-child{border-bottom:0}
+.prow .pn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prow .track{position:relative;height:10px;border-radius:5px;background:#eef1f5}
+.prow .fill{position:absolute;inset:0 auto 0 0;border-radius:5px;background:#a8b4c4}
+.prow .fill.above{background:var(--cnn)}
+.prow .thr{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);border-radius:1px}
+.prow .pv{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
+.prow .pv small{display:block;font-size:11px;color:var(--muted)}
+
+/* ---------- evaluation ---------- */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:980px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.kpis{grid-template-columns:1fr}}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow)}
+.kpi .big{font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.kpi .lbl{font-size:13px;font-weight:600;margin-top:4px}
+.kpi .cap{font-size:12px;color:var(--muted);margin-top:2px}
+.kpi.hl{border-color:#b7dcd7;background:var(--accent-soft)}
+.kpi.hl .big{color:var(--accent-2)}
+.ba-vals{display:flex;align-items:center;gap:18px;margin-bottom:8px}
+.ba-vals .big{font-size:28px;font-weight:700}
+.ba-vals .arrow{color:var(--faint);font-size:22px}
+.charts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
+@media (max-width:1180px){.charts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){.charts{grid-template-columns:1fr}}
+.chart h4{margin:0 0 2px;font-size:13px}
+.chart .cap{font-size:11.5px;color:var(--muted);margin-bottom:8px;min-height:30px}
+.crow{display:grid;grid-template-columns:118px 1fr 74px;gap:8px;align-items:center;font-size:12px;padding:4px 0}
+.crow .cl{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crow .ct{height:12px;background:#eef1f5;border-radius:3px;position:relative}
+.crow .cf{position:absolute;inset:0 auto 0 0;background:#a8b4c4;border-radius:3px}
+.crow.claims .cf{background:var(--accent)}
+.crow.claims .cl{color:var(--ink);font-weight:650}
+.crow .cv{text-align:right;font-variant-numeric:tabular-nums}
+.crow .cv.na{color:var(--faint);font-size:10.5px;font-style:italic;white-space:nowrap}
+
+/* ---------- technical / limitations ---------- */
+details.acc{border-top:1px solid var(--line)}
+details.acc:first-child{border-top:0}
+details.acc>summary{padding:13px 18px;list-style:none;display:flex;justify-content:space-between;align-items:center;font-weight:600}
+details.acc>summary::-webkit-details-marker{display:none}
+details.acc>summary::after{content:"+";color:var(--muted);font-weight:400;font-size:18px}
+details.acc[open]>summary::after{content:"–"}
+details.acc .body{padding:0 18px 14px;color:var(--ink-2);font-size:13.5px;line-height:1.65}
+details.acc .body ul{margin:4px 0;padding-left:18px}
+.limits{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:860px){.limits{grid-template-columns:1fr}}
+.limits li{border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--ink-2);background:var(--panel)}
+.limits li b{color:var(--ink)}
+footer{margin:32px 0 40px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:14px}
 </style>
 </head>
 <body>
-<header>
-  <h1>CLAIMS: evidence-grounded ECG reports</h1>
-  <p class="sub">PTB-XL test fold (never seen in training). Every statement in the verified report cites an evidence item; click any citation or evidence row to see where it is on the ECG.</p>
-  <div class="bar">
-    <label for="pick">ECG</label><select id="pick"></select>
-    <span id="pt" class="note"></span>
-  </div>
-</header>
-<main>
-  <section>
-    <div class="card">
-      <h2>12-lead ECG <span id="sel" class="note" style="text-transform:none;letter-spacing:0"></span></h2>
-      <div id="ecgwrap"><canvas id="ecg"></canvas><div id="tip"></div></div>
-      <div class="legend">
-        <span><i class="sw" style="background:var(--meas-bg);border:1px solid var(--meas)"></i>measurement window [M#]</span>
-        <span><i class="sw" style="background:var(--cnn-bg);border:1px solid var(--cnn)"></i>where the CNN looked [C#] (Integrated Gradients)</span>
-        <span>grid: 0.2 s × 0.5 mV (large boxes)</span>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M1 14h6l2.5-6 4 13 3.5-10 2 3h6" stroke="#5eead4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <h1><b>CLAIMS</b> <span>· Evidence-Grounded ECG Interpretation</span></h1>
+        <p>An evidence-grounded pipeline combining ECG signal processing, quantitative measurements, deep learning and verified language generation.</p>
+        <div class="pills"><span class="pill">Research Prototype</span><span class="pill accent">PTB-XL — held-out test fold</span></div>
       </div>
     </div>
-    <div class="card">
-      <h2>Reports</h2>
-      <div id="reports"></div>
+    <div class="pillars" aria-label="What CLAIMS does">
+      <div class="pillar"><i>1</i><span><b>Real 12-lead signals</b><br>500 Hz recordings, measured beat by beat</span></div>
+      <div class="pillar"><i>2</i><span><b>Evidence-linked predictions</b><br>every finding points to leads and a time window</span></div>
+      <div class="pillar"><i>3</i><span><b>Verified reports</b><br>each sentence is checked against the evidence</span></div>
     </div>
-  </section>
-  <aside>
-    <div class="card"><h2>Evidence: measurements</h2><div id="meas"></div></div>
-    <div class="card"><h2>Evidence: CNN diagnoses</h2><div id="dx"></div><div id="flags"></div></div>
-    <div class="card"><h2>Our measurements vs GE 12SL</h2><table id="cmp"></table>
-      <p class="note">12SL = commercial algorithm (PTB-XL+); used only as a reference, never as labels.</p></div>
-    <div class="card"><h2>CNN probabilities (top 8)</h2><div id="probs"></div>
-      <p class="note">Tick mark = per-class decision threshold tuned on the validation fold.</p></div>
-    <div class="card"><h2>Test-fold results (all 2,158 ECGs)</h2><div id="kpi" class="kpi"></div></div>
-  </aside>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- B. case selector -->
+  <div class="panel selector">
+    <div class="sel-row">
+      <label class="search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search ECG ID…" inputmode="numeric" autocomplete="off" aria-label="Search by ECG ID">
+      </label>
+      <div class="chips" id="cats" role="group" aria-label="Filter by diagnosis category"></div>
+    </div>
+    <div class="cases" id="cases" role="list"></div>
+  </div>
+
+  <!-- C. overview -->
+  <div class="overview" id="overview" aria-live="polite"></div>
+
+  <!-- D + E1 + F -->
+  <div class="main">
+    <div class="panel" id="viewerPanel">
+      <div class="ph">
+        <h2>12-lead ECG</h2>
+        <div class="toolbar">
+          <span class="tlabel">Layout</span>
+          <div class="seg" id="layoutSeg">
+            <button data-v="stacked" aria-pressed="true">12 × 10 s</button>
+            <button data-v="standard" aria-pressed="false">3 × 4 + rhythm</button>
+          </div>
+          <span class="tlabel">Zoom</span>
+          <div class="seg" id="zoomSeg">
+            <button data-v="1" aria-pressed="true">1×</button><button data-v="2" aria-pressed="false">2×</button><button data-v="4" aria-pressed="false">4×</button>
+          </div>
+          <span class="tlabel">Gain</span>
+          <div class="seg" id="gainSeg">
+            <button data-v="5" aria-pressed="false">5</button><button data-v="10" aria-pressed="true">10 mm/mV</button>
+          </div>
+          <label class="toggle"><input type="checkbox" id="showAll" checked> All evidence</label>
+        </div>
+      </div>
+      <div class="pb">
+        <div class="viewer" id="viewer"><canvas id="ecg" role="img" aria-label="12-lead ECG waveform with evidence overlays"></canvas><div id="tip"></div></div>
+        <div class="pan" id="panRow" hidden><span class="note">Pan</span><input type="range" id="pan" min="0" max="1000" value="0" aria-label="Pan through the recording"><span class="note" id="panLbl"></span></div>
+        <div class="legend">
+          <span><i class="sw m"></i>Measurement window [M#]</span>
+          <span><i class="sw c"></i>CNN attribution region [C#] (Integrated Gradients)</span>
+          <span>Small box 0.04 s · large box 0.2 s · gain <span id="gainLbl">10 mm/mV</span></span>
+          <span id="panHint">Click a region to inspect it</span>
+        </div>
+        <div class="detail" id="detail"></div>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="panel report-main" id="claimsReport">
+        <div class="ph"><div><div class="eyebrow">CLAIMS output</div><h2>Fine-tuned LLM — verified output</h2></div></div>
+        <div class="pb" id="verified"></div>
+      </div>
+      <div class="panel" id="explorer">
+        <div class="ph"><h2>Evidence explorer</h2><span class="sub">hover to preview · click to pin</span></div>
+        <div class="tabs" role="tablist">
+          <button class="tab" role="tab" id="tab-m" aria-selected="true" aria-controls="evlist">Measurements<span class="n" id="nm"></span></button>
+          <button class="tab" role="tab" id="tab-c" aria-selected="false" aria-controls="evlist">CNN diagnoses<span class="n" id="nc"></span></button>
+        </div>
+        <div class="ev-list" id="evlist" role="tabpanel"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- E2/E3 -->
+  <div class="section-title"><h2>Report comparison</h2><p>The same ECG described three ways. Only the CLAIMS output above is verified against the evidence.</p></div>
+  <div class="reports-row">
+    <div class="panel"><div class="ph"><div><div class="eyebrow">Reference</div><h3>Cardiologist report</h3></div></div><div class="pb" id="cardio"></div></div>
+    <div class="panel"><div class="ph"><div><div class="eyebrow">Baseline</div><h3>Template baseline — no LLM</h3></div></div><div class="pb" id="template"></div></div>
+  </div>
+  <details class="panel cmp" id="cmp">
+    <summary>Model output comparison <span class="note" style="font-weight:400">— raw LLM outputs before verification; not clinical reports</span></summary>
+    <div class="cmp-grid">
+      <div><div class="eyebrow" style="margin-bottom:6px">Fine-tuned LLM — raw, before verification</div><div class="md" id="rawFt"></div></div>
+      <div><div class="eyebrow" style="margin-bottom:6px">Zero-shot LLM — no fine-tuning</div><div class="md" id="rawZs"></div></div>
+    </div>
+  </details>
+
+  <!-- G + H -->
+  <div class="section-title"><h2>Measurements and model probabilities</h2></div>
+  <div class="two">
+    <div class="panel">
+      <div class="ph"><h3>Our measurements vs GE 12SL</h3></div>
+      <div class="pb"><table id="cmpTable"></table>
+        <p class="note" style="margin:10px 0 0">GE 12SL is used as a commercial comparison reference, not as ground truth or as a source of CNN labels. A small difference shows agreement with 12SL, not clinical accuracy.</p></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><h3>CNN probabilities — top 8 classes</h3><span class="sub">bar = probability · black mark = decision threshold</span></div>
+      <div class="pb"><div id="probs"></div>
+        <p class="note" style="margin:10px 0 0">Each class has its own threshold, selected on the validation fold to maximise F1; a class is reported when its probability reaches that threshold, not 0.5. A probability is the model's score, not clinical certainty.</p></div>
+    </div>
+  </div>
+
+  <!-- I. evaluation -->
+  <div class="section-title"><h2>Evaluation</h2><p id="evalSub"></p></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="two" style="margin-top:16px">
+    <div class="panel"><div class="ph"><h3>Low-confidence findings stated as fact</h3></div><div class="pb" id="ba"></div></div>
+    <div class="panel"><div class="ph"><h3>Upstream components</h3></div><div class="pb" id="upstream"></div></div>
+  </div>
+  <div class="panel" style="margin-top:16px">
+    <div class="ph"><h3>Report systems compared</h3><span class="sub" id="chartsSub"></span></div>
+    <div class="pb charts" id="charts"></div>
+  </div>
+
+  <!-- J. technical + limitations -->
+  <div class="section-title"><h2>Technical details</h2></div>
+  <div class="panel" id="tech"></div>
+  <div class="section-title"><h2>Known limitations</h2><p>Stated openly; the README gives the numbers behind each point.</p></div>
+  <ul class="limits">
+    <li><b>Measurement precision.</b> PR and QT precision is below commercial algorithms (median difference vs 12SL ≈ 10 ms and 16 ms).</li>
+    <li><b>Wide QRS.</b> QRS duration is overestimated in bundle branch block and paced ECGs.</li>
+    <li><b>Rare findings.</b> Rare findings (e.g. LVH, RVH, right atrial enlargement) can be under-reported; the CNN has few training examples for some classes.</li>
+    <li><b>Stock phrasing.</b> The LLM has memorised a stock ischaemia phrase from the translated German reports.</li>
+    <li><b>Explanations.</b> Integrated Gradients is informative on average, but the explanation for an individual ECG is not always reliable.</li>
+    <li><b>Labels.</b> PTB-XL long-QT labels are incomplete, which limits evaluation of the QTc rule.</li>
+    <li><b>Translation.</b> German and Swedish reports were machine-translated, which introduces some noise.</li>
+    <li><b>Verifier scope.</b> The verifier checks that stated findings exist in the evidence; it does not check “normal” statements (e.g. “normal axis”) against the measurements.</li>
+  </ul>
+  <footer>CLAIMS research prototype — not a medical device and not clinically validated. ECG data: PTB-XL and PTB-XL+ (PhysioNet, CC BY 4.0).</footer>
 </main>
+
 <script>
 const D = /*__DATA__*/null;
 const $ = id => document.getElementById(id);
-const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-let cur = null, active = null;
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const CATS = ["Normal","Rhythm","Conduction","Ischaemia","Infarction","Hypertrophy"];
+const C = {meas:"#c2410c", measFill:"rgba(234,88,12,.18)", measFaint:"rgba(234,88,12,.06)",
+           cnn:"#1d4ed8", cnnFill:"rgba(37,99,235,.16)", cnnFaint:"rgba(37,99,235,.05)",
+           gMinor:"#f7dfe0", gMajor:"#eebcbe", trace:"#111827", label:"#3d4b5f", axis:"#6b7a8f"};
+const S = {ci:0, pinned:null, hover:null, layout:"stacked", zoom:1, t0:0, gain:10, showAll:true, tab:"m", cat:"All", q:""};
+let cur = null;
+const FONT = () => getComputedStyle(document.body).fontFamily;
 
-D.cases.forEach((c, i) => { const o = document.createElement("option"); o.value = i;
-  o.textContent = `ECG ${c.id} — ${c.why}`; $("pick").appendChild(o); });
-$("pick").onchange = e => show(+e.target.value);
+/* ---------------- formatting ---------------- */
+function fmtVal(v, unit){
+  if (v == null || Number.isNaN(+v)) return "";
+  const n = +v;
+  if (unit === "mV") return `${n.toFixed(2)} mV`;
+  if (unit === "deg") return `${Math.round(n)}°`;
+  if (unit === "beats") return `${Math.round(n)} ${Math.round(n) === 1 ? "beat" : "beats"}`;
+  if (unit === "ms" || unit === "bpm") return `${Math.round(n)} ${unit}`;
+  return `${+n.toFixed(2)}${unit ? " " + unit : ""}`;
+}
+const fmtP = p => (+p).toFixed(2);
+const fmtT = w => w ? `${(+w[0]).toFixed(2)}–${(+w[1]).toFixed(2)} s` : "";
+const pct = x => (x * 100).toFixed(1) + "%";
+const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+const crit = s => esc(s).replace(/&gt;=/g, "≥").replace(/&lt;=/g, "≤").replace(/\^\(1\/3\)/g, "<sup>1/3</sup>").replace(/\^\(1\/2\)/g, "<sup>1/2</sup>");
+const specificLeads = it => (it.leads || []).filter(l => l !== "all" && l !== "global");
+const isAll = it => !specificLeads(it).length;
+const item = id => cur && [...cur.findings, ...cur.diagnoses].find(x => x.id === id);
+const cite = id => `<span class="cite ${id[0]==="M"?"m":"c"}" data-ev="${id}" tabindex="0" role="button" aria-label="Evidence ${id}">${id}</span>`;
 
-function item(id){ return [...cur.findings, ...cur.diagnoses].find(x => x.id === id); }
-function chip(id){ return `<span class="chip ${id[0]==="M"?"m":"c"}" data-id="${id}">${id}</span>`; }
-
-function show(i){
-  cur = D.cases[i]; active = null;
-  $("pt").textContent = `${cur.age ?? "?"} y, ${cur.sex ?? "sex unknown"}`;
-  const R = cur.reports;
-  const llm = R.llm_sentences.map(s => {
-    const cut = s.removed.length ? `<span class="tag bad">removed: ${s.removed.map(esc).join("; ")} (not in evidence)</span>` : "";
-    if (!s.text) return `<span class="removed">${esc(s.original)}</span>${cut}`;
-    return `<span class="${s.hedged?"hedge":""}">${esc(s.text)}</span> ${s.cites.map(chip).join("")}${s.hedged?'<span class="tag warn">hedged: low CNN confidence</span>':""}${cut}`;
-  }).join(" ");
-  $("reports").innerHTML = `
-    <div class="rep"><div class="lbl">Fine-tuned LLM, verified (what CLAIMS outputs)</div><p class="txt">${llm || "<i>empty</i>"}</p></div>
-    <div class="rep"><div class="lbl">Cardiologist (PTB-XL, translated to English where needed)</div><p class="txt">${esc(R.cardiologist) || "<i>none</i>"}</p></div>
-    <div class="rep"><div class="lbl">Template baseline (no LLM)</div><p class="txt">${esc(R.template)}</p></div>
-    <details><summary>Fine-tuned LLM raw output and zero-shot LLM</summary>
-      <div class="rep" style="margin-top:8px"><div class="lbl">Fine-tuned LLM, raw</div><p class="txt">${esc(R.llm_raw)}</p></div>
-      <div class="rep"><div class="lbl">Zero-shot LLM (no fine-tuning)</div><p class="txt" style="white-space:pre-wrap;font-size:13px">${esc(R.zero_shot)}</p></div>
-    </details>`;
-  const fmtv = c => c.value == null ? "" : ` ${+(+c.value).toFixed(c.unit==="mV"?2:0)} ${c.unit}`;
-  const lds = c => (c.leads||[]).filter(l=>l!=="all"&&l!=="global").join(", ");
-  $("meas").innerHTML = cur.findings.map(c => `<div class="ev" data-id="${c.id}">${chip(c.id)}<div><span>${esc(c.finding)}</span><span class="v">${fmtv(c)}</span>${lds(c)?`<br><small>${lds(c)}</small>`:""}</div></div>`).join("");
-  $("dx").innerHTML = cur.diagnoses.map(c => `<div class="ev" data-id="${c.id}">${chip(c.id)}<div>${esc(c.finding)} <span class="v">p=${c.probability.toFixed(2)}</span>
-     ${c.supported_by.length?`<span class="tag ok">supported by ${c.supported_by.join(", ")}</span>`:""}
-     ${c.contradicted_by.length?`<span class="tag bad">contradicted by ${c.contradicted_by.join(", ")}</span>`:""}
-     ${c.probability<0.5&&!c.supported_by.length?'<span class="tag warn">low confidence</span>':""}
-     ${lds(c)?`<br><small>looked at ${lds(c)}</small>`:""}</div></div>`).join("") || '<p class="note">No class above threshold.</p>';
-  $("flags").innerHTML = cur.flags.map(f => `<p class="flag">⚠ ${esc(f)}</p>`).join("");
-  const names = {hr_bpm:"Heart rate (bpm)",pr_ms:"PR (ms)",qrs_ms:"QRS (ms)",qt_ms:"QT (ms)",qtc_bazett_ms:"QTc Bazett (ms)",qrs_axis_deg:"QRS axis (°)"};
-  $("cmp").innerHTML = "<tr><th>Measure</th><th>Ours</th><th>12SL</th><th>Δ</th></tr>" + cur.measure_vs_12sl.map(r =>
-    `<tr><td>${names[r.name]||r.name}</td><td>${r.ours??"–"}</td><td>${r.ref??"–"}</td><td>${r.ours!=null&&r.ref!=null?(Math.round(r.ours-r.ref)||0):"–"}</td></tr>`).join("");
-  $("probs").innerHTML = cur.probs.map(p => `<div class="prob" title="${esc(p.code)}"><span>${esc(p.name)}</span>
-     <span class="track"><span class="fill" style="width:${p.p*100}%;opacity:${p.p>=p.th?1:.45}"></span><span class="thr" style="left:${p.th*100}%"></span></span>
-     <span class="num">${p.p.toFixed(2)}</span></div>`).join("");
-  document.querySelectorAll("[data-id]").forEach(el => el.onclick = ev => { ev.stopPropagation(); select(el.dataset.id); });
-  select(null);
+/* tiny, safe Markdown renderer for raw model output (escape first, then bold / italics / bullets / paragraphs) */
+function md(src){
+  if (!src) return '<p class="note">No output.</p>';
+  let html = "", inList = false;
+  const inline = s => s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/(^|\s)\*(\S(?:.*?\S)?)\*(?=\s|$|[.,;:])/g, "$1<em>$2</em>");
+  for (const raw of esc(src).split(/\n/)){
+    const l = raw.trim();
+    const li = l.match(/^(?:[-*•]|\d+\.)\s+(.*)$/);
+    if (li){ if (!inList){ html += "<ul>"; inList = true; } html += `<li>${inline(li[1])}</li>`; continue; }
+    if (inList){ html += "</ul>"; inList = false; }
+    if (!l) continue;
+    const h = l.match(/^#{1,6}\s+(.*)$/);
+    html += h ? `<p><strong>${inline(h[1])}</strong></p>` : `<p>${inline(l)}</p>`;
+  }
+  return html + (inList ? "</ul>" : "");
 }
 
-function select(id){
-  active = active === id ? null : id;
-  document.querySelectorAll("[data-id]").forEach(el => el.classList.toggle("on", el.dataset.id === active));
-  const it = active && item(active);
-  $("sel").textContent = it ? `— ${active}: ${it.finding}${it.window_s?` @ ${it.window_s[0]}–${it.window_s[1]} s`:""}` : "";
-  draw();
+/* ---------------- case selector ---------------- */
+function buildCats(){
+  const counts = Object.fromEntries(CATS.map(c => [c, D.cases.filter(x => x.category === c).length]));
+  $("cats").innerHTML = [["All", D.cases.length], ...CATS.filter(c => counts[c]).map(c => [c, counts[c]])]
+    .map(([c, n]) => `<button class="chip-f" data-cat="${c}" aria-pressed="${S.cat===c}">${c}<span class="n">${n}</span></button>`).join("");
+  $("cats").querySelectorAll("button").forEach(b => b.onclick = () => { S.cat = b.dataset.cat; buildCats(); buildCases(); });
 }
+function buildCases(){
+  const q = S.q;
+  const list = D.cases.map((c, i) => [c, i]).filter(([c]) => (S.cat === "All" || c.category === S.cat) && (!q || String(c.id).includes(q)));
+  $("cases").innerHTML = list.length ? list.map(([c, i]) => `
+    <button class="case" role="listitem" data-i="${i}" aria-current="${i===S.ci}">
+      <div class="cid">ECG ${c.id}</div>
+      <div class="ct">${esc(c.why)}</div>
+      <span class="cat cat-${c.category}">${c.category}</span>${c.verifier_example?'<span class="vtag">· verifier example</span>':""}
+    </button>`).join("") : `<div class="empty">No ECG matches “${esc(q)}”${S.cat === "All" ? "" : " in " + S.cat}.</div>`;
+  $("cases").querySelectorAll(".case").forEach(b => b.onclick = () => selectCase(+b.dataset.i));
+}
+$("q").addEventListener("input", e => {
+  S.q = e.target.value.replace(/\D/g, ""); buildCases();
+  const exact = D.cases.findIndex(c => String(c.id) === S.q);
+  if (exact >= 0 && exact !== S.ci) selectCase(exact);
+});
+
+function selectCase(i){
+  S.ci = i; cur = D.cases[i]; S.pinned = null; S.hover = null; S.t0 = 0;
+  cur._base = cur._base || cur.signal.map(median);
+  // default gain: 10 mm/mV unless the largest lead would not fit, then 5 mm/mV (user can change it)
+  const p2p = cur.signal.map(s => { const a = [...s].sort((x, y) => x - y); return (a[Math.floor(a.length*.995)] - a[Math.floor(a.length*.005)]) / 1000; });
+  S.gain = Math.max(...p2p) > 3.2 ? 5 : 10; syncSeg("gainSeg", S.gain);
+  document.querySelectorAll(".case").forEach(b => b.setAttribute("aria-current", +b.dataset.i === i));
+  history.replaceState(null, "", "#" + cur.id);
+  renderAll();
+}
+function median(a){ const b = [...a].sort((x, y) => x - y); return b[b.length >> 1]; }
+
+/* ---------------- overview ---------------- */
+function primaryFinding(){
+  const dx = cur.diagnoses.filter(d => !["SR","NORM"].includes(d.concept)).sort((a, b) => b.probability - a.probability);
+  return dx[0] || cur.diagnoses.find(d => d.concept === "NORM") || cur.diagnoses[0];
+}
+function renderOverview(){
+  const f = c => cur.findings.find(x => x.concept === c);
+  const hr = f("HR"), qrs = f("QRS"), qtc = f("QTC"), pf = primaryFinding();
+  const lowq = [...new Set(cur.findings.flatMap(x => x.low_quality_leads || []))];
+  const q = cur.quality || {};
+  const card = (k, v, s, cls = "") => `<div class="metric ${cls}"><div class="k">${k}</div><div class="v">${v}</div><div class="s" title="${String(s || "").replace(/<[^>]+>/g, "")}">${s || "&nbsp;"}</div></div>`;
+  const na = '<span style="font-size:13px;color:var(--faint);font-weight:500">Not available</span>';
+  const val = (x, unit) => x ? `${Math.round(x.value)}<small>${unit}</small>` : na;
+  $("overview").innerHTML =
+    card("ECG", `<span style="font-family:var(--mono)">${cur.id}</span>`, `<span class="cat cat-${cur.category}">${cur.category}</span>`) +
+    card("Patient", cur.age != null ? `${cur.age}<small>y</small>` : na, cap(cur.sex) || "sex not recorded") +
+    card("Primary CNN finding", pf ? esc(cap(pf.finding)) : "None above threshold", pf ? `p ${fmtP(pf.probability)} · threshold ${fmtP(pf.threshold)}` : "", "wide") +
+    card("Heart rate", val(hr, "bpm"), hr ? "mean RR interval" : "") +
+    card("QRS duration", val(qrs, "ms"), qrs ? "median beat" : "") +
+    card("QTc", val(qtc, "ms"), qtc ? "Fridericia" : "") +
+    card("Signal quality", q.beats ? `${q.dominant_beats}/${q.beats}<small>beats</small>` : na,
+         lowq.length ? `baseline wander: ${lowq.join(", ")}` : (q.beats ? "dominant beats used" : ""));
+}
+
+/* ---------------- waveform viewer ---------------- */
+const cv = $("ecg"), ctx = cv.getContext("2d");
+let G = null;
+const GROUPS = [["I","II","III"],["aVR","aVL","aVF"],["V1","V2","V3"],["V4","V5","V6"]];
+
+function geometry(){
+  const W = Math.max(760, $("viewer").clientWidth - 2);
+  const left = 46, right = 10, top = 12, bottom = 26, plotW = W - left - right;
+  const sbox = plotW / 10 * 0.04;                 // px per small box ("1 mm" = 0.04 s at 1×)
+  const pxPerMV = sbox * S.gain;
+  const span = 10 / S.zoom;
+  let cells = [], H;
+  if (S.layout === "stacked"){
+    const rowH = Math.round(Math.min(80, Math.max(52, sbox * 16)));
+    cells = D.leads.map((l, i) => ({lead:l, ta:S.t0, tb:S.t0 + span, x:left, w:plotW, y:top + i*rowH, h:rowH}));
+    H = top + 12*rowH + bottom;
+  } else {
+    const rowH = Math.round(Math.min(150, Math.max(96, sbox * 28)));
+    GROUPS.forEach((g, c) => g.forEach((l, r) => cells.push({lead:l, ta:2.5*c, tb:2.5*(c+1), x:left + c*plotW/4, w:plotW/4, y:top + r*rowH, h:rowH})));
+    cells.push({lead:"II", ta:0, tb:10, x:left, w:plotW, y:top + 3*rowH, h:rowH, rhythm:true});
+    H = top + 4*rowH + bottom;
+  }
+  return {W, H, left, top, bottom, plotW, sbox, pxPerMV, cells, span};
+}
+const xOf = (c, t) => c.x + (t - c.ta) / (c.tb - c.ta) * c.w;
+const tOf = (c, x) => c.ta + (x - c.x) / c.w * (c.tb - c.ta);
 
 function draw(){
-  const cv = $("ecg"), W = cv.clientWidth, rowH = Math.max(46, Math.min(70, W / 14));
-  const left = 38, H = rowH * 12 + 22, dpr = window.devicePixelRatio || 1;
-  cv.width = W * dpr; cv.height = H * dpr; cv.style.height = H + "px";
-  const g = cv.getContext("2d"); g.scale(dpr, dpr);
-  g.fillStyle = css("--surface"); g.fillRect(0, 0, W, H);
-  const pw = W - left - 6, T = 10, px = t => left + t / T * pw;
-  const mvPx = rowH / 1.5;                                   // 1.5 mV per row
-  // ECG paper grid
-  for (let t = 0; t <= T + 1e-9; t += 0.04) { const major = Math.abs(t/0.2 - Math.round(t/0.2)) < 1e-6;
-    g.strokeStyle = css(major ? "--grid-major" : "--grid-minor"); g.lineWidth = major ? 1 : .5;
-    if (!major && pw / 250 < 2.5) continue;
-    g.beginPath(); g.moveTo(px(t), 0); g.lineTo(px(t), rowH * 12); g.stroke(); }
-  for (let v = 0; v <= rowH * 12 + 0.1; v += mvPx * 0.1) { const k = Math.round(v / (mvPx * 0.1)), major = k % 5 === 0;
-    if (!major && mvPx * 0.1 < 2.5) continue;
-    g.strokeStyle = css(major ? "--grid-major" : "--grid-minor"); g.lineWidth = major ? 1 : .5;
-    g.beginPath(); g.moveTo(left, v); g.lineTo(left + pw, v); g.stroke(); }
-  // highlight of the selected evidence item
-  const it = active && item(active);
-  if (it && it.window_s) {
-    const all = !it.leads || it.leads.includes("all") || it.leads.includes("global");
-    const isM = active[0] === "M";
-    D.leads.forEach((l, i) => { if (!all && !it.leads.includes(l)) return;
-      const x0 = px(it.window_s[0]), x1 = Math.max(px(it.window_s[1]), x0 + 3);
-      g.fillStyle = css(isM ? "--meas-bg" : "--cnn-bg"); g.fillRect(x0, i * rowH + 2, x1 - x0, rowH - 4);
-      g.strokeStyle = css(isM ? "--meas" : "--cnn"); g.lineWidth = 1.5; g.strokeRect(x0, i * rowH + 2, x1 - x0, rowH - 4); });
+  if (!cur) return;
+  G = geometry();
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = Math.round(G.W * dpr); cv.height = Math.round(G.H * dpr); cv.style.height = G.H + "px";
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, G.W, G.H);
+  const top = G.top, bot = G.H - G.bottom, x0 = G.left, x1 = G.left + G.plotW;
+  const stacked = S.layout === "stacked";
+  const pxPerSec = stacked ? G.plotW / G.span : G.plotW / 10;
+  const tA = stacked ? S.t0 : 0, tB = tA + (stacked ? G.span : 10);
+  // paper grid
+  const minorV = pxPerSec * 0.04 >= 3, minorH = G.sbox >= 3;
+  for (let k = Math.ceil(tA / 0.04 - 1e-6); k * 0.04 <= tB + 1e-6; k++){
+    const major = k % 5 === 0; if (!major && !minorV) continue;
+    const x = Math.round(x0 + (k*0.04 - tA) * pxPerSec) + .5;
+    ctx.strokeStyle = major ? C.gMajor : C.gMinor; ctx.lineWidth = major ? 1 : .6;
+    ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bot); ctx.stroke();
   }
+  for (let k = 0; top + k*G.sbox <= bot + .1; k++){
+    const major = k % 5 === 0; if (!major && !minorH) continue;
+    const y = Math.round(top + k*G.sbox) + .5;
+    ctx.strokeStyle = major ? C.gMajor : C.gMinor; ctx.lineWidth = major ? 1 : .6;
+    ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+  }
+  // evidence overlays, under the trace
+  const ev = [...cur.findings, ...cur.diagnoses].filter(it => it.window_s);
+  TAGS = [];
+  const act0 = item(S.hover || S.pinned);
+  // background overlay: localised regions only (recording-wide findings appear when hovered or selected)
+  if (S.showAll) ev.filter(it => !isAll(it) && it !== act0 && it.window_s[1] - it.window_s[0] <= 3).forEach(it => drawRegion(it, false));
+  const act = item(S.hover || S.pinned);
+  if (act && act.window_s) drawRegion(act, true);
   // traces
-  g.font = "12px system-ui, sans-serif";
-  D.leads.forEach((l, i) => {
-    const y0 = i * rowH + rowH / 2, s = cur.signal[i];
-    let med = [...s].sort((a,b)=>a-b)[s.length >> 1];
-    g.fillStyle = css("--ink2"); g.fillText(l, 4, y0 + 4);
-    g.strokeStyle = css("--trace"); g.lineWidth = 1.1; g.beginPath();
-    for (let k = 0; k < s.length; k++) { const x = px(k / D.fs), y = y0 - (s[k] - med) / 1000 * mvPx;
-      k ? g.lineTo(x, Math.max(i*rowH, Math.min((i+1)*rowH, y))) : g.moveTo(x, y); }
-    g.stroke();
+  G.cells.forEach(c => {
+    const li = D.leads.indexOf(c.lead), s = cur.signal[li], base = cur._base[li];
+    const yMid = c.y + c.h / 2, lim = c.h * .62;
+    ctx.save(); ctx.beginPath(); ctx.rect(c.x, c.y - c.h*.12, c.w, c.h*1.24); ctx.clip();
+    ctx.strokeStyle = C.trace; ctx.lineWidth = 1.15; ctx.lineJoin = "round"; ctx.beginPath();
+    const i0 = Math.max(0, Math.floor(c.ta * D.fs)), i1 = Math.min(s.length - 1, Math.ceil(c.tb * D.fs));
+    for (let i = i0; i <= i1; i++){
+      const x = xOf(c, i / D.fs), dy = Math.max(-lim, Math.min(lim, (s[i] - base) / 1000 * G.pxPerMV));
+      i === i0 ? ctx.moveTo(x, yMid - dy) : ctx.lineTo(x, yMid - dy);
+    }
+    ctx.stroke(); ctx.restore();
+    ctx.font = "600 11.5px " + FONT(); ctx.textAlign = "left";
+    if (stacked){ ctx.fillStyle = C.label; ctx.fillText(c.lead, 8, yMid + 4); }
+    else {
+      const txt = c.rhythm ? "II · rhythm strip" : c.lead, w = ctx.measureText(txt).width + 8;
+      ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.fillRect(c.x + 3, c.y + 3, w, 16);
+      ctx.fillStyle = C.label; ctx.fillText(txt, c.x + 7, c.y + 15);
+      if (!c.rhythm && c.ta > 0){ ctx.strokeStyle = "#475569"; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(c.x + .5, yMid - 10); ctx.lineTo(c.x + .5, yMid + 10); ctx.stroke(); }
+    }
   });
-  g.fillStyle = css("--muted");
-  for (let t = 0; t <= 10; t += 1) g.fillText(t + " s", px(t) - (t === 10 ? 24 : 4), rowH * 12 + 16);
-  cv.onmousemove = e => { const r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
-    const t = (x - left) / pw * T, li = Math.floor(y / rowH);
-    if (t < 0 || t > T || li < 0 || li > 11) { $("tip").style.display = "none"; return; }
-    const v = cur.signal[li][Math.min(cur.signal[li].length - 1, Math.round(t * D.fs))] / 1000;
-    $("tip").style.display = "block"; $("tip").textContent = `${D.leads[li]}  ${t.toFixed(2)} s  ${v.toFixed(2)} mV`;
-    $("tip").style.left = Math.min(x + 12, W - 150) + "px"; $("tip").style.top = (y + 12) + "px"; };
-  cv.onmouseleave = () => $("tip").style.display = "none";
+  // time axis
+  ctx.fillStyle = C.axis; ctx.font = "11px " + FONT(); ctx.textAlign = "center";
+  const step = stacked ? (G.span <= 2.5 ? .25 : G.span <= 5 ? .5 : 1) : 1;
+  for (let t = Math.ceil(tA / step - 1e-9) * step; t <= tB + 1e-6; t += step)
+    ctx.fillText(`${+t.toFixed(2)} s`, Math.min(x1 - 14, Math.max(x0 + 12, x0 + (t - tA) * pxPerSec)), G.H - 8);
+  // pan controls
+  const zoomed = stacked && S.zoom > 1;
+  $("panRow").hidden = !zoomed;
+  $("panHint").textContent = zoomed ? "Click a region to inspect it · drag the trace to pan" : "Click a region to inspect it";
+  if (zoomed){ $("pan").value = Math.round(S.t0 / (10 - G.span) * 1000); $("panLbl").textContent = `${S.t0.toFixed(2)}–${(S.t0 + G.span).toFixed(2)} s`; }
+  $("gainLbl").textContent = `${S.gain} mm/mV`;
 }
 
-const M = D.metrics, f = x => (x * 100).toFixed(1) + "%";
-$("kpi").innerHTML = [
-  [M.finetuned.clinical_micro_f1.toFixed(2), `clinical F1, fine-tuned LLM (cardiologist ceiling ${M.reference.clinical_micro_f1.toFixed(2)})`],
-  [f(M.zero_shot.unsupported_concept_rate), "unsupported claims, zero-shot LLM"],
-  [f(M.finetuned.unsupported_concept_rate), "unsupported claims, fine-tuned LLM"],
-  ["0%", "unsupported claims after verification"],
-  [f(M.finetuned_verified.low_confidence_stated_without_hedge), "low-confidence findings stated as fact after verification (" + f(M.finetuned.low_confidence_stated_without_hedge) + " before)"],
-].map(([b, s]) => `<div><b>${b}</b><span>${s}</span></div>`).join("");
-window.addEventListener("resize", () => cur && draw());
-matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => cur && draw());
-// URL options: #<ecg_id>[:<evidence id>]  and  ?theme=light|dark
-const th = new URLSearchParams(location.search).get("theme");
-if (th) { document.documentElement.dataset.theme = th; }
-const [hid, hsel] = location.hash.slice(1).split(":");
-const h = D.cases.findIndex(c => String(c.id) === hid);
-$("pick").value = Math.max(0, h); show(Math.max(0, h));
-if (hsel) select(hsel);
+let TAGS = [];   // placed tag boxes in this frame, to avoid overlapping labels
+function placeTag(x, y, w){
+  let yy = y;
+  for (let k = 0; k < 6; k++){
+    if (!TAGS.some(b => x < b.x + b.w + 2 && x + w + 2 > b.x && Math.abs(yy - b.y) < 13)) break;
+    yy += 14;
+  }
+  TAGS.push({x, y:yy, w}); return yy;
+}
+function drawRegion(it, active){
+  const isM = it.id[0] === "M";
+  const leads = isAll(it) ? D.leads : specificLeads(it);
+  const [a, b] = it.window_s;
+  let tagged = false;
+  G.cells.forEach(c => {
+    if (!leads.includes(c.lead)) return;
+    const ta = Math.max(a, c.ta), tb = Math.min(b, c.tb);
+    if (tb < ta) return;
+    const xa = xOf(c, ta), xb = Math.max(xOf(c, tb), xa + 3), y = c.y + 2, h = c.h - 4;
+    ctx.fillStyle = active ? (isM ? C.measFill : C.cnnFill) : (isM ? C.measFaint : C.cnnFaint);
+    ctx.fillRect(xa, y, xb - xa, h);
+    ctx.strokeStyle = active ? (isM ? C.meas : C.cnn) : (isM ? "rgba(194,65,12,.35)" : "rgba(29,78,216,.32)");
+    ctx.lineWidth = active ? 1.6 : 1; ctx.setLineDash(isM ? [] : (active ? [5, 3] : [4, 3]));
+    ctx.strokeRect(xa + .5, y + .5, xb - xa - 1, h - 1); ctx.setLineDash([]);
+    if (!tagged && (active || !isAll(it))){
+      tagged = true;
+      ctx.font = "600 10px " + FONT();
+      const w = ctx.measureText(it.id).width + 6;
+      const ty = placeTag(xa, y - 1, w);
+      ctx.globalAlpha = active ? 1 : .8; ctx.fillStyle = isM ? C.meas : C.cnn; ctx.fillRect(xa, ty, w, 13); ctx.globalAlpha = 1;
+      ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText(it.id, xa + 3, ty + 10);
+    }
+  });
+}
+
+/* hit-testing */
+function locate(e){
+  const r = cv.getBoundingClientRect(), x = (e.clientX - r.left) * (G.W / r.width), y = (e.clientY - r.top) * (G.H / r.height);
+  const c = G.cells.find(c => x >= c.x && x <= c.x + c.w && y >= c.y && y <= c.y + c.h);
+  return c ? {c, t: tOf(c, x)} : null;
+}
+function itemsAt(L){
+  return [...cur.findings, ...cur.diagnoses].filter(it => it.window_s && !isAll(it) && specificLeads(it).includes(L.c.lead)
+      && L.t >= it.window_s[0] - .02 && L.t <= it.window_s[1] + .02)
+    .sort((a, b) => (a.window_s[1] - a.window_s[0]) - (b.window_s[1] - b.window_s[0]));
+}
+let drag = null;
+cv.addEventListener("pointerdown", e => { drag = {x:e.clientX, t0:S.t0, moved:false}; });
+window.addEventListener("pointerup", e => {
+  if (!drag) return;
+  const moved = drag.moved; drag = null;
+  if (moved || e.target !== cv) return;
+  const L = locate(e); if (!L) return;
+  const hits = itemsAt(L);
+  if (hits.length) pin(hits[0].id, {fromWaveform:true}); else if (S.pinned) pin(null);
+});
+cv.addEventListener("pointermove", e => {
+  if (drag && S.layout === "stacked" && S.zoom > 1){
+    const dx = e.clientX - drag.x;
+    if (Math.abs(dx) > 4) drag.moved = true;
+    if (drag.moved){ const r = cv.getBoundingClientRect(); S.t0 = clampT(drag.t0 - dx * (G.W / r.width) / G.plotW * G.span); draw(); }
+  }
+  const L = locate(e), tip = $("tip");
+  if (!L){ tip.style.display = "none"; cv.style.cursor = "crosshair"; return; }
+  const li = D.leads.indexOf(L.c.lead), k = Math.min(cur.signal[li].length - 1, Math.max(0, Math.round(L.t * D.fs)));
+  const mv = (cur.signal[li][k] - cur._base[li]) / 1000;
+  const hits = itemsAt(L).slice(0, 3);
+  tip.innerHTML = `<b>${L.c.lead}</b> · ${L.t.toFixed(2)} s · ${mv.toFixed(2)} mV` +
+    hits.map(h => `<br><b>${h.id}</b> ${esc(h.finding)}`).join("") + (hits.length ? '<br><span style="opacity:.7">click to inspect</span>' : "");
+  const vr = $("viewer").getBoundingClientRect();
+  tip.style.display = "block";
+  tip.style.left = Math.min(e.clientX - vr.left + $("viewer").scrollLeft + 14, $("viewer").scrollWidth - 240) + "px";
+  tip.style.top = (e.clientY - vr.top + 14) + "px";
+  cv.style.cursor = hits.length ? "pointer" : (S.zoom > 1 && S.layout === "stacked" ? "grab" : "crosshair");
+});
+cv.addEventListener("pointerleave", () => { $("tip").style.display = "none"; });
+const clampT = t => Math.max(0, Math.min(10 - 10 / S.zoom, t));
+$("pan").addEventListener("input", e => { S.t0 = clampT(+e.target.value / 1000 * (10 - 10 / S.zoom)); draw(); });
+
+function syncSeg(id, v){ $(id).querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v) === String(v))); }
+$("layoutSeg").querySelectorAll("button").forEach(b => b.onclick = () => {
+  S.layout = b.dataset.v; syncSeg("layoutSeg", S.layout);
+  $("zoomSeg").querySelectorAll("button").forEach(z => { z.disabled = S.layout !== "stacked"; z.title = z.disabled ? "Zoom is available in the 12 × 10 s layout" : ""; });
+  if (S.layout !== "stacked"){ S.zoom = 1; S.t0 = 0; syncSeg("zoomSeg", 1); }
+  draw();
+});
+$("zoomSeg").querySelectorAll("button").forEach(b => b.onclick = () => {
+  const centre = S.t0 + 5 / S.zoom; S.zoom = +b.dataset.v; S.t0 = clampT(centre - 5 / S.zoom);
+  const it = item(S.pinned); if (it) reveal(it);
+  syncSeg("zoomSeg", S.zoom); draw();
+});
+$("gainSeg").querySelectorAll("button").forEach(b => b.onclick = () => { S.gain = +b.dataset.v; syncSeg("gainSeg", S.gain); draw(); });
+$("showAll").onchange = e => { S.showAll = e.target.checked; draw(); };
+
+function reveal(it){
+  if (!it || !it.window_s || S.layout !== "stacked" || S.zoom === 1) return;
+  const span = 10 / S.zoom, [a, b] = it.window_s;
+  if (a < S.t0 || b > S.t0 + span) S.t0 = clampT((a + b) / 2 - span / 2);
+}
+
+/* ---------------- selection ---------------- */
+function pin(id, opt = {}){
+  S.pinned = (id && S.pinned === id && !opt.fromWaveform && !opt.force) ? null : id;
+  const it = item(S.pinned);
+  if (it){
+    reveal(it);
+    const want = it.id[0] === "M" ? "m" : "c";
+    if (S.tab !== want){ S.tab = want; renderExplorer(); }
+  }
+  markActive(); renderDetail(); draw();
+  if (it){
+    const row = $("evlist").querySelector(`.ev[data-ev="${it.id}"]`);
+    if (row){ const L = $("evlist"), top = row.offsetTop - L.offsetTop;
+      if (top < L.scrollTop || top + row.offsetHeight > L.scrollTop + L.clientHeight) L.scrollTo({top: top - 8, behavior:"smooth"}); }
+    if (opt.scrollViewer){
+      const r = $("viewerPanel").getBoundingClientRect();
+      if (r.bottom < 120 || r.top > innerHeight * .6) $("viewerPanel").scrollIntoView({behavior:"smooth", block:"start"});
+    }
+  }
+}
+function hover(id){ if (S.hover !== id){ S.hover = id; draw(); } }
+function markActive(){ document.querySelectorAll("[data-ev]").forEach(el => el.classList.toggle("on", el.dataset.ev === S.pinned)); }
+function wireEvidence(root){
+  root.querySelectorAll("[data-ev]").forEach(el => {
+    el.addEventListener("mouseenter", () => hover(el.dataset.ev));
+    el.addEventListener("mouseleave", () => hover(null));
+    el.addEventListener("focus", () => hover(el.dataset.ev));
+    el.addEventListener("blur", () => hover(null));
+    const go = ev => { ev.stopPropagation(); pin(el.dataset.ev, {scrollViewer: !el.closest("#explorer") && !el.closest("#detail"), force: el.closest("#detail") != null}); };
+    el.addEventListener("click", go);
+    el.addEventListener("keydown", ev => { if (ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); go(ev); } });
+  });
+}
+function itemFacts(it){
+  const isM = it.id[0] === "M", L = specificLeads(it), out = [];
+  if (isM){
+    out.push(`<span>Leads <b>${L.length ? L.join(", ") : (it.leads?.[0] === "global" ? "all leads (global)" : "all leads")}</b></span>`);
+    if (it.window_s) out.push(`<span>Window <b>${fmtT(it.window_s)}</b></span>`);
+    if (it.contiguous_territories?.length) out.push(`<span>Territory <b>${it.contiguous_territories.join(", ")}</b></span>`);
+  } else {
+    out.push(`<span>Probability <b>${fmtP(it.probability)}</b></span><span>Threshold <b>${fmtP(it.threshold)}</b></span>`);
+    if (L.length) out.push(`<span>IG leads <b>${L.join(", ")}</b></span>`);
+    if (it.window_s) out.push(`<span>IG region <b>${fmtT(it.window_s)}</b></span>`);
+  }
+  return out.join("");
+}
+function qualityTags(it){
+  let t = "";
+  if (it.secondary_to_wide_qrs) t += '<span class="tag warn" title="ST/T/Q changes expected with a wide QRS; not used as evidence of ischaemia or infarction">secondary to wide QRS</span>';
+  if (it.low_quality_leads?.length) t += `<span class="tag warn" title="Baseline wander above 0.3 mV on these leads">low-quality leads: ${it.low_quality_leads.join(", ")}</span>`;
+  if (it.id[0] === "C"){
+    if (it.supported_by.length) t += `<span class="tag ok">supported by ${it.supported_by.map(cite).join("")}</span>`;
+    if (it.contradicted_by.length) t += `<span class="tag bad">contradicted by ${it.contradicted_by.map(cite).join("")}</span>`;
+    if (it.probability < .5 && !it.supported_by.length) t += '<span class="tag warn" title="Probability below 0.5 with no supporting measurement: the verifier hedges this finding">low confidence</span>';
+  }
+  return t;
+}
+function renderDetail(){
+  const it = item(S.pinned);
+  if (!it){ $("detail").innerHTML = '<span class="hint">Select a citation, an evidence row or a highlighted region on the trace to inspect it here.</span>'; return; }
+  const isM = it.id[0] === "M";
+  const per = it.per_lead ? Object.entries(it.per_lead).map(([l, v]) => `${l} ${(+v).toFixed(2)}`).join(" · ") : "";
+  $("detail").innerHTML = `${cite(it.id)}<div style="min-width:0;flex:1"><b>${esc(cap(it.finding))}</b>${isM && it.value != null ? `<span class="val">${fmtVal(it.value, it.unit)}</span>` : ""}
+    <div style="margin-top:4px">${isAll(it) && isM ? '<span class="tag neutral">whole-ECG measurement</span>' : ""}${qualityTags(it)}</div>
+    <div class="note" style="display:flex;gap:3px 14px;flex-wrap:wrap;margin-top:3px">${itemFacts(it)}</div>
+    ${isM && it.criterion ? `<div class="note">Criterion: ${crit(it.criterion)}</div>` : ""}
+    ${per ? `<div class="note">Per lead (mV): ${per}</div>` : ""}</div>
+    <button class="x" aria-label="Clear selection" id="clearSel">×</button>`;
+  $("clearSel").onclick = () => pin(null);
+  wireEvidence($("detail"));
+}
+
+/* ---------------- reports ---------------- */
+function renderReports(){
+  const R = cur.reports, sents = R.llm_sentences;
+  const kept = sents.filter(s => s.text), removed = sents.flatMap(s => s.removed);
+  const nHedged = kept.filter(s => s.hedged).length, nCites = kept.reduce((n, s) => n + s.cites.length, 0);
+  $("verified").innerHTML = `
+    <p class="report-text">${kept.length ? kept.map(s => `<span class="sent ${s.hedged ? "hedged" : ""}"${s.hedged ? ' title="Contains a low-confidence finding (CNN probability below 0.5, no supporting measurement), hedged by the verifier"' : ""}>${esc(cap(s.text))}</span>${s.cites.map(cite).join("")}`).join(" ") : '<span class="note">No statement survived verification.</span>'}</p>
+    ${removed.length ? `<div class="removed-box"><b>Removed by the verifier</b> (not supported by the evidence): ${removed.map(r => `<s>${esc(r)}</s>`).join("; ")}</div>` : ""}
+    <div class="report-meta">
+      <span class="tag ok">${nCites} citation${nCites === 1 ? "" : "s"}</span>
+      ${nHedged ? `<span class="tag warn">${nHedged} hedged statement${nHedged > 1 ? "s" : ""}</span>` : ""}
+      <span class="tag ${removed.length ? "bad" : "neutral"}">${removed.length} unsupported phrase${removed.length === 1 ? "" : "s"} removed</span>
+    </div>`;
+  const langName = {de:"German", sv:"Swedish", en:"English"}[R.cardiologist_lang] || R.cardiologist_lang;
+  const translated = R.cardiologist_lang && R.cardiologist_lang !== "en";
+  $("cardio").innerHTML = R.cardiologist ? `
+    <p class="rep-text">${esc(cap(R.cardiologist))}</p>
+    <div class="src">${translated ? `Source: PTB-XL. Machine-translated from ${langName} for this project; the English wording is not the cardiologist's own.` : "Source: PTB-XL. Original English report."}</div>
+    ${translated && R.cardiologist_original ? `<details class="orig"><summary>Original ${langName} text</summary><p lang="${R.cardiologist_lang}">${esc(R.cardiologist_original)}</p></details>` : ""}`
+    : '<p class="note">No cardiologist report available for this ECG.</p>';
+  $("template").innerHTML = `<p class="rep-text">${esc(cap(R.template))}</p><div class="src">Rule-based sentences assembled from the same evidence sheet; no language model.</div>`;
+  $("rawFt").innerHTML = md(R.llm_raw);
+  $("rawZs").innerHTML = md(R.zero_shot);
+  wireEvidence($("verified"));
+}
+
+/* ---------------- evidence explorer ---------------- */
+function renderExplorer(){
+  $("nm").textContent = cur.findings.length; $("nc").textContent = cur.diagnoses.length;
+  $("tab-m").setAttribute("aria-selected", S.tab === "m"); $("tab-c").setAttribute("aria-selected", S.tab === "c");
+  const rows = S.tab === "m" ? cur.findings : cur.diagnoses;
+  $("evlist").innerHTML = rows.length ? rows.map(it => {
+    const isM = it.id[0] === "M", qt = qualityTags(it);
+    return `<div class="ev" data-ev="${it.id}" tabindex="0" role="button">
+      ${cite(it.id)}
+      <div><span class="nm">${esc(cap(it.finding))}</span>${isM && it.value != null ? `<span class="val">${fmtVal(it.value, it.unit)}</span>` : ""}</div>
+      ${isM ? "" : `<div class="pbar" title="probability ${fmtP(it.probability)}, threshold ${fmtP(it.threshold)}"><div class="f" style="width:${it.probability*100}%"></div><div class="t" style="left:calc(${it.threshold*100}% - 1px)"></div></div>`}
+      <div class="meta">${itemFacts(it)}</div>
+      ${qt ? `<div class="meta">${qt}</div>` : ""}
+      ${isM && it.criterion ? `<div class="crit">${crit(it.criterion)}</div>` : ""}
+    </div>`; }).join("") : `<div class="empty">${S.tab === "c" ? "No CNN class reached its decision threshold." : "No measurements available."}</div>`;
+  wireEvidence($("evlist")); markActive();
+}
+$("tab-m").onclick = () => { S.tab = "m"; renderExplorer(); };
+$("tab-c").onclick = () => { S.tab = "c"; renderExplorer(); };
+
+/* ---------------- measurement comparison + probabilities ---------------- */
+const MNAME = {hr_bpm:["Heart rate","bpm",0], pr_ms:["PR interval","ms",0], qrs_ms:["QRS duration","ms",0], qt_ms:["QT interval","ms",0],
+               qtc_bazett_ms:["QTc (Bazett)","ms",0], qrs_axis_deg:["QRS axis","°",0]};
+function renderTables(){
+  const ok = v => v != null && !Number.isNaN(+v);
+  $("cmpTable").innerHTML = "<tr><th>Measurement</th><th>CLAIMS</th><th>GE 12SL</th><th>Difference</th></tr>" + cur.measure_vs_12sl.map(r => {
+    const [n, u, d] = MNAME[r.name] || [r.name, "", 1];
+    const f = v => ok(v) ? `${(+v).toFixed(d)}${u === "°" ? "°" : " " + u}` : null;
+    let diff = null, bar = "";
+    if (ok(r.ours) && ok(r.ref)){
+      let dv = r.ours - r.ref; if (r.name === "qrs_axis_deg") dv = ((dv + 180) % 360 + 360) % 360 - 180;
+      const r0 = Math.round(dv * 10 ** d) / 10 ** d;
+      const rel = Math.min(1, Math.abs(dv) / Math.max(1, Math.abs(r.ref)));
+      diff = r0 === 0 ? `0${u === "°" ? "°" : " " + u}` : `${r0 > 0 ? "+" : "−"}${Math.abs(r0).toFixed(d)}${u === "°" ? "°" : " " + u}`;
+      bar = `<span class="dbar" style="width:${Math.max(2, rel*60)}px" title="${(rel*100).toFixed(0)}% of the 12SL value"></span>`;
+    }
+    const cell = v => v == null ? '<td class="na">Not available</td>' : `<td>${v}</td>`;
+    return `<tr><td>${n}</td>${cell(f(r.ours))}${cell(f(r.ref))}${diff == null ? '<td class="na">Not available</td>' : `<td>${diff}${bar}</td>`}</tr>`;
+  }).join("");
+  $("probs").innerHTML = cur.probs.map(p => {
+    const above = p.p >= p.th;
+    return `<div class="prow" title="${esc(p.code)}"><span class="pn">${esc(cap(p.name))}</span>
+      <span class="track" role="img" aria-label="probability ${fmtP(p.p)}, threshold ${fmtP(p.th)}"><span class="fill ${above ? "above" : ""}" style="width:${p.p*100}%"></span><span class="thr" style="left:calc(${p.th*100}% - 1px)"></span></span>
+      <span class="pv">${fmtP(p.p)}<small>thr ${fmtP(p.th)}${above ? " · reported" : ""}</small></span></div>`;
+  }).join("");
+}
+
+/* ---------------- evaluation (from metrics.json) ---------------- */
+function renderEval(){
+  const M = D.metrics;
+  $("evalSub").textContent = `Held-out PTB-XL test fold (fold 10, never used for training or tuning) · ${M.n.toLocaleString("en")} ECGs with a cardiologist report.`;
+  const k = (big, lbl, capt, hl) => `<div class="kpi ${hl ? "hl" : ""}"><div class="big">${big}</div><div class="lbl">${lbl}</div><div class="cap">${capt}</div></div>`;
+  $("kpis").innerHTML =
+    k(M.finetuned.clinical_micro_f1.toFixed(2), "Clinical F1 — fine-tuned LLM", `micro-F1 of diagnoses stated in the report vs PTB-XL labels; cardiologist reports reach ${M.reference.clinical_micro_f1.toFixed(2)} on the same check`) +
+    k(pct(M.zero_shot.unsupported_concept_rate), "Unsupported claims — zero-shot LLM", "stated findings with no backing in the evidence sheet") +
+    k(pct(M.finetuned.unsupported_concept_rate), "Unsupported claims — fine-tuned LLM", "after LoRA fine-tuning on evidence-faithful reports, before verification") +
+    k(pct(M.finetuned_verified.unsupported_concept_rate), "Unsupported claims — verified output", "after the verifier cuts unsupported phrases; this is what CLAIMS shows", true);
+  $("ba").innerHTML = `<div class="ba-vals"><div><div class="big">${pct(M.finetuned.low_confidence_stated_without_hedge)}</div><div class="note">before verification</div></div>
+      <div class="arrow" aria-hidden="true">→</div><div><div class="big" style="color:var(--accent-2)">${pct(M.finetuned_verified.low_confidence_stated_without_hedge)}</div><div class="note">after verification</div></div></div>
+    <div class="note">Among findings the fine-tuned LLM mentions whose only support is a CNN probability below 0.5 (with no supporting measurement): the share stated without any hedge. The verifier rewrites each as “possible …”.</div>`;
+  const cm = D.cnn_metrics, ms = Object.fromEntries((D.measure_summary || []).map(r => [r.measure, r["ours vs 12SL"]]));
+  const m = (key, u, d = 0) => ms[key] != null && !Number.isNaN(+ms[key]) ? `${(+ms[key]).toFixed(d)} ${u}` : "Not available";
+  $("upstream").innerHTML = `<table>
+    <tr><th>Component</th><th>Test fold</th></tr>
+    <tr><td>CNN macro-AUC, 35 classes</td><td>${cm.macro_auc_35.toFixed(3)}</td></tr>
+    <tr><td>CNN macro-AUC, 5 superclasses</td><td>${cm.superclass_macro_auc.toFixed(3)}</td></tr>
+    <tr><td>Median |difference| vs 12SL: PR · QRS · QT</td><td>${m("pr_ms","ms")} · ${m("qrs_ms","ms")} · ${m("qt_ms","ms",1)}</td></tr>
+    <tr><td>Median |difference| vs 12SL: ST at J point</td><td>${m("st_j (all leads)","mV",3)}</td></tr></table>`;
+  const sys = [["reference","Cardiologist reference"],["template","Template baseline"],["zero_shot","Zero-shot LLM"],["finetuned","Fine-tuned LLM"],["finetuned_verified","CLAIMS (verified)"]];
+  const charts = [
+    ["clinical_micro_f1","Clinical micro-F1","higher is better · diagnoses in the text vs PTB-XL labels",1,v=>v.toFixed(2)],
+    ["clinical_macro_f1","Clinical macro-F1","higher is better · averaged over diagnostic classes",1,v=>v.toFixed(2)],
+    ["unsupported_concept_rate","Unsupported claims","lower is better · stated findings not in the evidence",null,pct],
+    ["rouge_l_vs_reference","ROUGE-L vs cardiologist","wording overlap with the cardiologist report",1,v=>v.toFixed(2)],
+  ];
+  $("chartsSub").textContent = "“not computed” where a metric was not evaluated for that system";
+  $("charts").innerHTML = charts.map(([key, title, capt, maxFixed, f]) => {
+    const vals = sys.map(([s]) => M[s]?.[key]);
+    const max = maxFixed || (Math.max(...vals.filter(v => v != null)) * 1.1) || 1;
+    return `<div class="chart"><h4>${title}</h4><div class="cap">${capt}</div>${sys.map(([s, lbl], i) => {
+      const v = vals[i];
+      return `<div class="crow ${s === "finetuned_verified" ? "claims" : ""}"><span class="cl" title="${lbl}">${lbl}</span>
+        <span class="ct">${v == null ? "" : `<span class="cf" style="width:${Math.max(.5, v / max * 100)}%"></span>`}</span>
+        <span class="cv ${v == null ? "na" : ""}">${v == null ? "not computed" : f(v)}</span></div>`; }).join("")}</div>`;
+  }).join("");
+}
+
+/* ---------------- technical details ---------------- */
+function renderTech(){
+  const T = [
+   ["Signal preprocessing", `<ul><li>PTB-XL records: 500 Hz, 10 s, 12 leads, stored losslessly as int16 µV.</li>
+     <li>Measurement path: 0.05–40 Hz band-pass (the diagnostic low cut-off preserves the ST segment) and a 50 Hz notch.</li>
+     <li>CNN path: 0.5–40 Hz band-pass, decimated to 100 Hz, per-lead standardisation fitted on the training folds only.</li>
+     <li>The trace on this page is the measurement-path signal, downsampled to ${D.fs} Hz for display.</li></ul>`],
+   ["Measurement engine", `<ul><li>Multi-lead R-peak detection; dominant beats selected by correlation ≥ 0.90 with the median beat.</li>
+     <li>Baseline wander removed with a cubic spline through PR-segment knots.</li>
+     <li>QRS onset and offset from the spatial velocity of the median beat; isoelectric reference in the PR segment; T end by the tangent method.</li>
+     <li>P waves require amplitude and beat-to-beat consistency; the frontal axis comes from the net QRS area in leads I and aVF.</li>
+     <li>Every finding records the leads and time window it was measured on: these are the [M#] regions on the trace.</li></ul>`],
+   ["XResNet1d classifier", `<ul><li>1-D ResNet with bottleneck blocks (kernel 5, [3, 4, 6, 3] blocks) at 100 Hz; 35 sigmoid outputs (23 diagnostic subclasses + 12 rhythms).</li>
+     <li>Binary cross-entropy, AdamW with a one-cycle schedule, mixed precision, random 90% crops.</li>
+     <li>Model selection by validation macro-AUC; per-class thresholds chosen on the validation fold to maximise F1.</li>
+     <li>Out-of-fold predictions (4 groups of training folds) build the LLM training data, so the LLM learns from realistic rather than memorised probabilities.</li></ul>`],
+   ["Integrated Gradients", `<ul><li>Attributions for every class above threshold: 24 interpolation steps from a flat (zero) baseline.</li>
+     <li>Summarised as the top contributing leads and the beat window with the most attribution: these are the [C#] regions.</li>
+     <li>Deletion test: removing the top lead lowers the class score about 5× more than removing a random lead on average, but for an individual ECG the top lead beats a random lead only about half the time.</li></ul>`],
+   ["Evidence construction", `<ul><li>Guideline rules on the measurements: 4th Universal Definition of MI ST-elevation thresholds with contiguous-lead territories, Sokolow-Lyon and Cornell LVH voltage, QTc (Fridericia) 450/460 ms, QRS ≥ 120 ms, axis deviation, low voltage, pathological Q waves, ectopy.</li>
+     <li>Each CNN class is marked as supported or contradicted by specific measurements.</li>
+     <li>ST/T/Q changes with QRS ≥ 120 ms are marked secondary and never support ischaemia or infarction.</li></ul>`],
+   ["Qwen2.5-1.5B LoRA fine-tuning", `<ul><li>Qwen2.5-1.5B-Instruct with LoRA (r = 16, α = 32, dropout 0.05) on all attention and MLP projections; bf16 with gradient checkpointing.</li>
+     <li>Input: the evidence sheet only, never the raw signal. Target: the cardiologist report, translated to English where needed.</li>
+     <li>Trained only on faithful pairs (every concept in the target report is backed by the evidence); loss on report tokens only; 1 epoch, learning rate 2e-4, effective batch 16.</li>
+     <li>Greedy decoding with repetition penalty 1.05.</li></ul>`],
+   ["Grounding and verification", `<ul><li>A rule-based concept extractor, with negation and anatomical-location handling, maps each sentence to clinical concepts.</li>
+     <li>Each concept is matched to evidence items; the matching items become the sentence's citations.</li>
+     <li>Unsupported concepts: only that phrase is cut; a sentence is dropped only if nothing supported remains.</li>
+     <li>Low confidence (supported only by CNN classes with p &lt; 0.5 and no measurement): “possible” is inserted before the mention.</li></ul>`],
+  ];
+  $("tech").innerHTML = T.map(([t, b]) => `<details class="acc"><summary>${t}</summary><div class="body">${b}</div></details>`).join("");
+}
+
+/* ---------------- render all ---------------- */
+function renderAll(){ renderOverview(); renderReports(); renderExplorer(); renderTables(); renderDetail(); draw(); }
+window.addEventListener("resize", () => { clearTimeout(window._rz); window._rz = setTimeout(draw, 80); });
+
+buildCats(); renderEval(); renderTech();
+const [hid, hsel] = location.hash.slice(1).split(":");          // URL: #<ecg_id>[:<evidence id>]
+const start = Math.max(0, D.cases.findIndex(c => String(c.id) === hid));
+buildCases(); selectCase(start);
+const qp = new URLSearchParams(location.search);                 // optional: ?layout=standard&zoom=2
+if (qp.get("layout") === "standard") $("layoutSeg").querySelector('[data-v="standard"]').click();
+if (["2","4"].includes(qp.get("zoom")) && S.layout === "stacked") $("zoomSeg").querySelector(`[data-v="${qp.get("zoom")}"]`).click();
+if (hsel && item(hsel)) pin(hsel, {force:true});
 </script>
 </body>
 </html>
