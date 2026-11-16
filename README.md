@@ -8,7 +8,6 @@
 
 12-lead ECG → measurements + CNN diagnoses → language-model report → verifier that removes anything the evidence does not support
 
-
 <img src="showcase/slide_assets/ecg20120_12lead.png" alt="12-lead ECG, PTB-XL test record 20120, left bundle branch block" width="100%">
 
 <sub>PTB-XL test ECG 20120 (57-year-old woman, held-out test fold), 25 mm/s. Cardiologist diagnosis: left bundle branch block.</sub>
@@ -83,7 +82,7 @@ flowchart LR
     E --> F{"Verifier"}
     F -- "supported" --> G["Cited report"]
     F -- "unsupported" --> H["phrase cut"]
-    F -- "p below 0.5, no measurement support" --> I["'possible …'"]
+    F -- "p below 0.5, no measurement support" --> I["hedged as possible"]
     H --> G
     I --> G
 ```
@@ -140,10 +139,7 @@ flowchart LR
 
 **Test ECG 8622.** The fine-tuned model adds "anteroseptal myocardial injury", but no measurement and no CNN finding supports it. The verifier cuts only that phrase and keeps the rest.
 
-<table>
-<tr>
-<td width="40%" align="center"><img src="showcase/slide_assets/ecg8622_C2.png" alt="Lead V1 with the CNN attribution window for incomplete RBBB"><br><sub><b>🟦 C2 · incomplete RBBB, p = 0.76</b><br>CNN attribution in V1</sub></td>
-<td width="60%" valign="top">
+<p align="center"><img src="showcase/slide_assets/ecg8622_C2.png" alt="Lead V1 with the CNN attribution window for incomplete RBBB" width="60%"><br><sub><b>🟦 C2 · incomplete RBBB, p = 0.76</b><br>CNN attribution in V1</sub></p>
 
 | Stage | Report |
 |---|---|
@@ -153,18 +149,11 @@ flowchart LR
 
 <sub>Evidence: `C1` sinus rhythm (p 0.99), `C2` incomplete RBBB (p 0.76), `M3` QRS 94 ms. Nothing in the evidence describes anteroseptal injury. The verifier missed one thing here: the measured axis is −6°, so "left axis" should also have been cut (see *Limitations*).</sub>
 
-</td>
-</tr>
-</table>
-
 ### Example 3 · The verifier hedges an uncertain finding
 
 **Test ECG 2569.** The model writes "inferior infarct" as a fact, but the CNN is only 48% sure and no measurement supports it. The verifier keeps the finding but rewrites it as **possible**.
 
-<table>
-<tr>
-<td width="40%" align="center"><img src="showcase/slide_assets/ecg2569_C2.png" alt="Close-up with the CNN attribution window for inferior MI"><br><sub><b>🟦 C2 · inferior MI, p = 0.48</b><br>below 0.5 and no measurement support</sub></td>
-<td width="60%" valign="top">
+<p align="center"><img src="showcase/slide_assets/ecg2569_C2.png" alt="Close-up with the CNN attribution window for inferior MI" width="60%"><br><sub><b>🟦 C2 · inferior MI, p = 0.48</b><br>below 0.5 and no measurement support</sub></p>
 
 | Stage | Report |
 |---|---|
@@ -173,10 +162,6 @@ flowchart LR
 | Cardiologist | sinus rhythm, suspected left atrial abnormality, left axis deviation |
 
 <sub>Rule: a CNN finding with p < 0.5 and no supporting measurement is never stated as fact. Here the cardiologist did not call an infarct, so the hedge was the right call.</sub>
-
-</td>
-</tr>
-</table>
 
 ## Showcase
 
