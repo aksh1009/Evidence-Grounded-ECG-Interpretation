@@ -76,22 +76,6 @@ Language models write fluent ECG reports, but they also **invent findings**, and
 
 <img width="2752" height="1536" alt="AdobeExpressPhotos_9b7a229d764545f6a39269138965855c_CopyEdited" src="https://github.com/user-attachments/assets/61f590fd-5d60-40c2-b1f3-74b9c6bf63fe" />
 
-<!-- 
-```mermaid
-flowchart LR
-    A["12-lead ECG<br/>500 Hz · 10 s"] --> B["Measurement engine<br/>HR · PR · QRS · QT/QTc · axis<br/>ST/T per lead · P · Q waves"]
-    A --> C["CNN (XResNet1d)<br/>35 classes<br/>+ Integrated Gradients"]
-    B -- "[M1] [M2] …" --> D["Evidence sheet<br/>guideline rules · support / contradiction<br/>secondary-to-wide-QRS"]
-    C -- "[C1] [C2] …" --> D
-    D --> E["LLM<br/>Qwen2.5-1.5B + LoRA<br/>sees evidence only"]
-    E --> F{"Verifier"}
-    F -- "supported" --> G["Cited report"]
-    F -- "unsupported" --> H["phrase cut"]
-    F -- "p below 0.5, no measurement support" --> I["hedged as possible"]
-    H --> G
-    I --> G
-```
--->
 
 
 1. **Measurements:** a hand-built engine using multi-lead beat detection, a median beat, spline baseline correction and the tangent T-end method. Every finding carries the leads and time window it was measured on.
