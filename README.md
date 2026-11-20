@@ -72,6 +72,11 @@ Language models write fluent ECG reports, but they also **invent findings**, and
 |---|---|---|---|
 | 12-lead ECG, 500 Hz, 10 s | **Measurement engine:** HR, PR, QRS, QTc, axis, ST/T per lead → `[M#]`<br>**CNN (XResNet1d):** 35 classes + Integrated Gradients → `[C#]` | **Qwen2.5-1.5B + LoRA** writes the report from the evidence sheet only | Each clinical concept is matched to a citation. Unsupported → cut. Uncertain → "possible". |
 
+
+
+<img width="2752" height="1536" alt="AdobeExpressPhotos_9b7a229d764545f6a39269138965855c_CopyEdited" src="https://github.com/user-attachments/assets/61f590fd-5d60-40c2-b1f3-74b9c6bf63fe" />
+
+<!-- 
 ```mermaid
 flowchart LR
     A["12-lead ECG<br/>500 Hz · 10 s"] --> B["Measurement engine<br/>HR · PR · QRS · QT/QTc · axis<br/>ST/T per lead · P · Q waves"]
@@ -86,6 +91,8 @@ flowchart LR
     H --> G
     I --> G
 ```
+-->
+
 
 1. **Measurements:** a hand-built engine using multi-lead beat detection, a median beat, spline baseline correction and the tangent T-end method. Every finding carries the leads and time window it was measured on.
 2. **CNN:** an XResNet1d at 100 Hz that predicts 23 diagnostic subclasses and 12 rhythms. Integrated Gradients records which leads and which beat it relied on.
